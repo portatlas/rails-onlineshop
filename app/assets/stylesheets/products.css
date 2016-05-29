@@ -1,0 +1,66 @@
+/*
+  Place all the styles related to the matching controller here.
+  They will automatically be included in application.css.
+*/
+
+/*.products-container{
+  position: absolute;
+  display: inline-block;
+  width: 100%;
+}*/
+
+.product-tiles{
+  display: inline-block;
+  width: 25%;
+  padding-right:50px;
+  padding-left:50px;
+}
+
+.product-header{
+  display: inline-block;
+  width: 40%;
+}
+
+.add-item{
+  float: right;
+  display: inline-block;
+  align-content: center;
+  padding-top: 30px;
+  padding-bottom: 30px;
+}
+
+.out-item{
+  text-align: right;
+  float: right;
+  display: inline-block;
+  align-content: center;
+  padding-right: 40px;
+  padding-top: 30px;
+  padding-bottom: 30px;
+}
+
+.product-info{
+  float:left;
+  width: 50%;
+}
+
+
+.product-image{
+  display: inline-block;
+  float: right;
+  width: 40%;
+}
+
+.back{
+  border-left: 10px;
+/*  background-color: red;*/
+}
+
+/*.img-container{
+  display: inline-block;
+  position: relative;
+  padding: 40px 40px 40px 50px;
+  width: 20%;
+}
+
+*/

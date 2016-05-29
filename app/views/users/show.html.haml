@@ -1,0 +1,37 @@
+- model_class = User
+.page-header
+  %h1.user-header=t '.title', :default => model_class.model_name.human.titleize
+%div.user-info
+  %p
+    %strong= model_class.human_attribute_name(:username) + ':'
+    %br
+    = current_user.username
+  %p
+    %strong= model_class.human_attribute_name(:first_name) + ':'
+    %br
+    = @user.first_name
+  %p
+    %strong= model_class.human_attribute_name(:last_name) + ':'
+    %br
+    = @user.last_name
+  %p
+    %strong= model_class.human_attribute_name(:email) + ':'
+    %br
+    = @user.email
+  %p
+    %strong= model_class.human_attribute_name(:street_address) + ':'
+    %br
+    = @user.street_address
+  %p
+    %strong= model_class.human_attribute_name(:city) + ':'
+    %br
+    = @user.city
+  %p
+    %strong= model_class.human_attribute_name(:state) + ':'
+    %br
+    = @user.state
+  %p
+    %strong= model_class.human_attribute_name(:zipcode) + ':'
+    %br
+    = @user.zipcode
+= link_to 'Order History', orders_path(@user.id)

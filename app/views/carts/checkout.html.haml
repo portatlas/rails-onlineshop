@@ -1,0 +1,8 @@
+%h1 Checkout
+%h3 Thank you for your purchase!
+- @product_orders.each do |product_order|
+  = render 'carts/order_details', product: product_order.product, product_order: product_order, show_total: true
+= render 'layouts/grand_total'
+= link_to 'Continue Shopping', products_path, :class => 'btn btn-danger'
+
+

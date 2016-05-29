@@ -1,0 +1,5 @@
+.shopping-cart
+  = render "shopping_cart"
+- if @product_orders.size > 0
+  = render 'layouts/grand_total'
+  = link_to 'Check Out', checkout_url, :class => 'btn btn-primary'

@@ -1,0 +1,30 @@
+/*
+  Place all the styles related to the matching controller here.
+  They will automatically be included in application.css.
+*/
+
+.total{
+  text-align: right;
+  padding: 15px 10px 15px 10px;
+}
+.quant{
+  width: 120px;
+  float: left;
+}
+.invoice{
+  text-align: right;
+}
+
+.in-line{
+  text-align: right;
+  width: 100px;
+  display: inline-block;
+  float: right;
+  width: 600px;
+  padding: 10px;
+}
+
+.grand-total{
+  text-align: right;
+  padding: 15px 10px 15px 10px;
+}

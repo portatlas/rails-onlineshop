@@ -1,0 +1,55 @@
+- model_class = Product
+- if @product.stock_count >= 1
+  .page-header
+    %h1.product-header=t '.title', :default => model_class.model_name.human.titleize
+    .col-xs-4.add-item
+      = form_for :product_order, url: product_orders_path, html: { class: "add-to-cart"},  remote: true do |f|
+        .input-group
+          = f.number_field :number_of_items, value: 1, class: "form-control", min: 1
+          .input-group-btn
+            = f.hidden_field :product_id, value: @product.id
+            = f.submit "Add to Cart", class: "btn btn-primary"
+- else
+  .page-header
+    %h1.product-header=t '.title', :default => model_class.model_name.human.titleize
+    .col-xs-4.out-item
+      %button.btn.btn-default{:disabled => "", :type => "button"} Out of Stock
+%div.product-info
+  %p
+    %strong= model_class.human_attribute_name(:name) + ':'
+    %br
+    = @product.name
+  %p
+    %strong= model_class.human_attribute_name(:price) + ':'
+    %br
+    = "&nbsp;$#{@product.price}".html_safe
+  %p
+    %strong= model_class.human_attribute_name(:description) + ':'
+    %br
+    = @product.description
+  %p
+    %strong= model_class.human_attribute_name(:brand) + ':'
+    %br
+    = @product.brand
+  %p
+    %strong= model_class.human_attribute_name(:discount) + ':'
+    %br
+    = @product.discount
+  %p
+    %strong= model_class.human_attribute_name(:stock_count) + ':'
+    %br
+    = @product.stock_count
+  %p
+    %strong= model_class.human_attribute_name(:categories) + ':'
+    %br
+  - @product.categories.each do |cat|
+    %a{:href => category_url(cat.id)}
+      = cat.name
+%div.product-image
+  %p.size
+    %strong= model_class.human_attribute_name(:picture) + ':'
+    %br
+    = image_tag @product.img_url, :class => "img-responsive"
+-# = link_to t('.back', :default => t("helpers.links.back")), products_path, :class => 'btn btn-danger back'
+
+

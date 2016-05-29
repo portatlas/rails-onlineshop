@@ -1,0 +1,42 @@
+%section.container
+  %h1= "ALL PRODUCTS"
+  = link_to t('.new', :default => t("helpers.links.new product")), new_product_path, :class => 'btn btn-primary'
+  = link_to t('.new', :default => t("helpers.links.new category")), new_category_path, :class => 'btn btn-primary'
+  %table.table.table-striped
+    %tbody
+      %tr
+        %td= "Picture"
+        %td= "Name"
+        %td= "Price"
+        %td= "Brand"
+        %td= "Description"
+        %td= "Stock Count"
+        %td= "Manage"
+      - @products.each do |product|
+        %tr
+          %td.size
+            %a{:href => product_url(product.id)}
+              = image_tag product.img_url, :class => "img-responsive"
+          %td= product.name
+          %td= "&nbsp;$#{product.price}".html_safe
+          %td= product.brand
+          %td= product.description
+          %td= product.stock_count
+          %td
+            = link_to 'Edit', edit_product_path(product.id)
+            = link_to 'Delete', product_path(product.id), method: :delete
+  %h1= "ALL CATEGORIES"
+  %table.table.table-striped
+    %tbody
+      %tr
+        %td= "Name"
+        %td= "Manage"
+    - @categories.each do |cat|
+      %tr
+        %td= cat.name
+        %td
+          = link_to 'Edit', edit_category_path(cat.id)
+          = link_to 'Delete', category_path(cat.id), method: :delete
+
+
+

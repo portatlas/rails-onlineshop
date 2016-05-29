@@ -1,0 +1,16 @@
+!!!
+%html
+  %head
+    %meta{:content => "text/html; charset=UTF-8", "http-equiv" => "Content-Type"}/
+  %body
+    %h1
+      Thank you for shopping at shoppe.com, #{@order.user.first_name}
+    %h2
+      Below is the details of your order:
+    - @order.product_orders.each do |product_order|
+      %ul
+        %li= "#{product_order.number_of_items.to_i} X #{product_order.product.name} for #{number_to_currency product_order.unit_price} for each item"
+    %h3.row.grand-total Grand Total #{number_to_currency @order.total_value}
+    %p
+      To login to the site, just follow this link: #{@url}.
+    %p Thanks for shopping and have a great day!

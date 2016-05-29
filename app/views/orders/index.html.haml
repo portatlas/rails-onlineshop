@@ -1,0 +1,13 @@
+%section.container
+  %h1= "Order History"
+  %h3= "Pending Orders"
+  - @user.orders.where(order_status_id: 2).each do |order|
+    %h5
+      = (order.created_at).strftime("%m/%d/%Y")
+      = "- Total Order Value #{number_to_currency order.total_value}"
+    - order.product_orders.each do |po|
+      %ul
+        %li
+          = "#{po.number_of_items.to_i} X #{po.product.name} for #{number_to_currency po.unit_price} for each item"
+        -# %li
+        -#   = order.total_value

@@ -1,0 +1,11 @@
+- if !@product_order.nil? && @product_order.errors.any?
+  .alert.alert-danger
+    %ul
+      - @product_order.errors.full_messages.each do |msg|
+        %li= msg
+- if @product_orders.size == 0
+  %p.text-center
+    There are no items in your shopping cart.  Please #{link_to "go back", root_path} and add some items to your cart.
+- else
+  - @product_orders.each do |product_order|
+    = render 'carts/cart_row', product: product_order.product, product_order: product_order, show_total: true

@@ -1,0 +1,19 @@
+.row.item-order
+  .col-xs-8
+    %h4= product.name
+  .col-xs-4
+    = form_for product_order, remote: true do |f|
+      %h4.text-right
+        Unit Price:
+        %span{:style => "color: green"}= number_to_currency product_order.unit_price
+      .row
+        .col-xs-10.in-line
+          .btn-group
+            = f.number_field :number_of_items, value: product_order.number_of_items.to_i, class: "form-control", min: 1
+            = f.hidden_field :product_id, value: product.id
+            = f.submit "Update Quantity", class: "btn btn-primary"
+            = link_to "Delete", product_order, { data: { confirm: "Are you sure you wish to delete the product '#{product_order.product.name}' from your cart?" }, method: :delete, remote: true, class: "btn btn-danger" }
+      %h4.text-right
+        Total Price:
+        %span{:style => "color: green"}= number_to_currency product_order.total_price
+

@@ -1,0 +1,8 @@
+%section.container
+  %h1= @category.name
+  .thumbnail
+    - @category.products.each do |product|
+      .product-tiles
+        %a{:href => product_url(product.id)}
+          = image_tag product.img_url
+        = link_to product.name, product_url(product.id)

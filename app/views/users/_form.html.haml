@@ -1,0 +1,51 @@
+= form_for @user, html: { class: "form form-horizontal user" } do |f|
+  .form-group
+    = f.label :username, class: 'control-label col-lg-2'
+    .col-lg-10
+      = f.text_field :username, class: 'form-control', required: true
+    = f.error_span(:username)
+  .form-group
+    = f.label :password, class: 'control-label col-lg-2'
+    .col-lg-10
+      = f.password_field :password, class: 'form-control', required: true
+    = f.error_span(:password)
+  .form-group
+    = f.label :first_name, class: 'control-label col-lg-2'
+    .col-lg-10
+      = f.text_field :first_name, class: 'form-control', required: true
+    = f.error_span(:first_name)
+  .form-group
+    = f.label :last_name, class: 'control-label col-lg-2'
+    .col-lg-10
+      = f.text_field :last_name, class: 'form-control', required: true
+    = f.error_span(:last_name)
+  .form-group
+    = f.label :email, class: 'control-label col-lg-2'
+    .col-lg-10
+      = f.text_field :email, class: 'form-control', required: true
+    = f.error_span(:email)
+  .form-group
+    = f.label :street_address, class: 'control-label col-lg-2'
+    .col-lg-10
+      = f.text_field :street_address, class: 'form-control', required: false
+    = f.error_span(:street_address)
+  .form-group
+    = f.label :city, class: 'control-label col-lg-2'
+    .col-lg-10
+      = f.text_field :city, class: 'form-control', required: false
+    = f.error_span(:city)
+  .form-group
+    = f.label :state, class: 'control-label col-lg-2'
+    .col-lg-10
+      = f.text_field :state, class: 'form-control', required: false
+    = f.error_span(:state)
+  .form-group
+    = f.label :zipcode, class: 'control-label col-lg-2'
+    .col-lg-10
+      = f.text_field :zipcode, class: 'form-control', required: false
+    = f.error_span(:zipcode)
+
+  .form-group
+    .col-lg-offset-2.col-lg-10
+      = f.submit nil,class: 'btn btn-primary'
+      = link_to t('.cancel', :default => t("helpers.links.cancel")), users_path, :class => 'btn btn-default'
