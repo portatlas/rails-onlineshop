@@ -1,0 +1,1341 @@
+  [1m[36m (19.8ms)[0m  [1mCREATE TABLE "schema_migrations" ("version" character varying NOT NULL) [0m
+  [1m[35m (1.4ms)[0m  CREATE UNIQUE INDEX  "unique_schema_migrations" ON "schema_migrations"  ("version")
+  [1m[36mActiveRecord::SchemaMigration Load (0.3ms)[0m  [1mSELECT "schema_migrations".* FROM "schema_migrations"[0m
+Migrating to CreateProducts (20160523232626)
+  [1m[35m (0.1ms)[0m  BEGIN
+  [1m[36m (34.7ms)[0m  [1mCREATE TABLE "products" ("id" serial primary key, "name" character varying NOT NULL, "price" integer NOT NULL, "description" text NOT NULL, "brand" character varying, "stock_count" integer NOT NULL, "discount" float, "img_url" character varying, "created_at" timestamp NOT NULL, "updated_at" timestamp NOT NULL) [0m
+  [1m[35mSQL (0.4ms)[0m  INSERT INTO "schema_migrations" ("version") VALUES ($1)  [["version", "20160523232626"]]
+  [1m[36m (15.9ms)[0m  [1mCOMMIT[0m
+Migrating to CreateOrders (20160523234959)
+  [1m[35m (0.4ms)[0m  BEGIN
+  [1m[36m (2.3ms)[0m  [1mCREATE TABLE "orders" ("id" serial primary key, "total_value" integer, "created_at" timestamp NOT NULL, "updated_at" timestamp NOT NULL) [0m
+  [1m[35mSQL (0.2ms)[0m  INSERT INTO "schema_migrations" ("version") VALUES ($1)  [["version", "20160523234959"]]
+  [1m[36m (0.5ms)[0m  [1mCOMMIT[0m
+Migrating to CreateProductOrders (20160523235918)
+  [1m[35m (0.2ms)[0m  BEGIN
+  [1m[36m (3.4ms)[0m  [1mCREATE TABLE "product_orders" ("id" serial primary key, "product_id" integer, "number_of_items" integer, "total_price" integer, "order_id" integer, "created_at" timestamp NOT NULL, "updated_at" timestamp NOT NULL) [0m
+  [1m[35mSQL (0.3ms)[0m  INSERT INTO "schema_migrations" ("version") VALUES ($1)  [["version", "20160523235918"]]
+  [1m[36m (0.6ms)[0m  [1mCOMMIT[0m
+Migrating to ChangePriceColumnToDecimal (20160524225407)
+  [1m[35m (0.3ms)[0m  BEGIN
+  [1m[36m (4.1ms)[0m  [1mALTER TABLE "products" ALTER COLUMN "price" TYPE decimal(7,2)[0m
+  [1m[35m (0.2ms)[0m  ALTER TABLE "products" ALTER "price" SET NOT NULL
+  [1m[36mSQL (0.2ms)[0m  [1mINSERT INTO "schema_migrations" ("version") VALUES ($1)[0m  [["version", "20160524225407"]]
+  [1m[35m (1.1ms)[0m  COMMIT
+Migrating to CreateUsers (20160525225223)
+  [1m[36m (0.2ms)[0m  [1mBEGIN[0m
+  [1m[35m (2.9ms)[0m  CREATE TABLE "users" ("id" serial primary key, "username" character varying NOT NULL, "email" character varying NOT NULL, "password_digest" character varying NOT NULL, "first_name" character varying NOT NULL, "last_name" character varying NOT NULL, "street_address" character varying, "city" character varying, "state" character varying, "zipcode" character varying, "created_at" timestamp NOT NULL, "updated_at" timestamp NOT NULL) 
+  [1m[36mSQL (0.2ms)[0m  [1mINSERT INTO "schema_migrations" ("version") VALUES ($1)[0m  [["version", "20160525225223"]]
+  [1m[35m (0.5ms)[0m  COMMIT
+Migrating to CreateCategories (20160525233630)
+  [1m[36m (0.2ms)[0m  [1mBEGIN[0m
+  [1m[35m (2.9ms)[0m  CREATE TABLE "categories" ("id" serial primary key, "name" character varying NOT NULL, "created_at" timestamp NOT NULL, "updated_at" timestamp NOT NULL) 
+  [1m[36mSQL (0.2ms)[0m  [1mINSERT INTO "schema_migrations" ("version") VALUES ($1)[0m  [["version", "20160525233630"]]
+  [1m[35m (0.5ms)[0m  COMMIT
+Migrating to CreateCategoryProducts (20160525234203)
+  [1m[36m (0.3ms)[0m  [1mBEGIN[0m
+  [1m[35m (2.2ms)[0m  CREATE TABLE "category_products" ("id" serial primary key, "product_id" integer, "category_id" integer, "created_at" timestamp NOT NULL, "updated_at" timestamp NOT NULL) 
+  [1m[36m (0.9ms)[0m  [1mCREATE  INDEX  "index_category_products_on_product_id" ON "category_products"  ("product_id")[0m
+  [1m[35m (1.4ms)[0m  CREATE  INDEX  "index_category_products_on_category_id" ON "category_products"  ("category_id")
+  [1m[36mSQL (0.2ms)[0m  [1mINSERT INTO "schema_migrations" ("version") VALUES ($1)[0m  [["version", "20160525234203"]]
+  [1m[35m (0.5ms)[0m  COMMIT
+Migrating to CreateOrderStatuses (20160527180819)
+  [1m[36m (0.2ms)[0m  [1mBEGIN[0m
+  [1m[35m (2.7ms)[0m  CREATE TABLE "order_statuses" ("id" serial primary key, "name" character varying, "created_at" timestamp NOT NULL, "updated_at" timestamp NOT NULL) 
+  [1m[36mSQL (0.3ms)[0m  [1mINSERT INTO "schema_migrations" ("version") VALUES ($1)[0m  [["version", "20160527180819"]]
+  [1m[35m (0.7ms)[0m  COMMIT
+Migrating to AddOrderStatusToOrders (20160527181209)
+  [1m[36m (0.5ms)[0m  [1mBEGIN[0m
+  [1m[35m (0.4ms)[0m  ALTER TABLE "orders" ADD "order_status_id" integer
+  [1m[36m (1.6ms)[0m  [1mCREATE  INDEX  "index_orders_on_order_status_id" ON "orders"  ("order_status_id")[0m
+  [1m[35mSQL (0.1ms)[0m  INSERT INTO "schema_migrations" ("version") VALUES ($1)  [["version", "20160527181209"]]
+  [1m[36m (0.4ms)[0m  [1mCOMMIT[0m
+Migrating to AddUnitPriceToProductOrders (20160527182349)
+  [1m[35m (0.1ms)[0m  BEGIN
+  [1m[36m (0.3ms)[0m  [1mALTER TABLE "product_orders" ADD "unit_price" decimal(7,2) NOT NULL[0m
+  [1m[35mSQL (0.1ms)[0m  INSERT INTO "schema_migrations" ("version") VALUES ($1)  [["version", "20160527182349"]]
+  [1m[36m (0.4ms)[0m  [1mCOMMIT[0m
+Migrating to ChangeTotalPriceToProductOrders (20160527182917)
+  [1m[35m (0.2ms)[0m  BEGIN
+  [1m[36m (2.0ms)[0m  [1mALTER TABLE "product_orders" ALTER COLUMN "total_price" TYPE decimal(7,2)[0m
+  [1m[35mSQL (0.2ms)[0m  INSERT INTO "schema_migrations" ("version") VALUES ($1)  [["version", "20160527182917"]]
+  [1m[36m (0.7ms)[0m  [1mCOMMIT[0m
+Migrating to ChangeTotalValueToOrder (20160527183208)
+  [1m[35m (0.2ms)[0m  BEGIN
+  [1m[36m (2.2ms)[0m  [1mALTER TABLE "orders" ALTER COLUMN "total_value" TYPE decimal(7,2)[0m
+  [1m[35mSQL (0.2ms)[0m  INSERT INTO "schema_migrations" ("version") VALUES ($1)  [["version", "20160527183208"]]
+  [1m[36m (0.7ms)[0m  [1mCOMMIT[0m
+Migrating to AddUserIdToOrders (20160527205221)
+  [1m[35m (0.1ms)[0m  BEGIN
+  [1m[36m (0.3ms)[0m  [1mALTER TABLE "orders" ADD "user_id" integer[0m
+  [1m[35m (1.2ms)[0m  CREATE  INDEX  "index_orders_on_user_id" ON "orders"  ("user_id")
+  [1m[36mSQL (0.2ms)[0m  [1mINSERT INTO "schema_migrations" ("version") VALUES ($1)[0m  [["version", "20160527205221"]]
+  [1m[35m (0.5ms)[0m  COMMIT
+  [1m[36mActiveRecord::SchemaMigration Load (0.3ms)[0m  [1mSELECT "schema_migrations".* FROM "schema_migrations"[0m
+  [1m[35m (2.3ms)[0m  SELECT t2.oid::regclass::text AS to_table, a1.attname AS column, a2.attname AS primary_key, c.conname AS name, c.confupdtype AS on_update, c.confdeltype AS on_delete
+FROM pg_constraint c
+JOIN pg_class t1 ON c.conrelid = t1.oid
+JOIN pg_class t2 ON c.confrelid = t2.oid
+JOIN pg_attribute a1 ON a1.attnum = c.conkey[1] AND a1.attrelid = t1.oid
+JOIN pg_attribute a2 ON a2.attnum = c.confkey[1] AND a2.attrelid = t2.oid
+JOIN pg_namespace t3 ON c.connamespace = t3.oid
+WHERE c.contype = 'f'
+  AND t1.relname = 'categories'
+  AND t3.nspname = ANY (current_schemas(false))
+ORDER BY c.conname
+
+  [1m[36m (2.5ms)[0m  [1mSELECT t2.oid::regclass::text AS to_table, a1.attname AS column, a2.attname AS primary_key, c.conname AS name, c.confupdtype AS on_update, c.confdeltype AS on_delete
+FROM pg_constraint c
+JOIN pg_class t1 ON c.conrelid = t1.oid
+JOIN pg_class t2 ON c.confrelid = t2.oid
+JOIN pg_attribute a1 ON a1.attnum = c.conkey[1] AND a1.attrelid = t1.oid
+JOIN pg_attribute a2 ON a2.attnum = c.confkey[1] AND a2.attrelid = t2.oid
+JOIN pg_namespace t3 ON c.connamespace = t3.oid
+WHERE c.contype = 'f'
+  AND t1.relname = 'category_products'
+  AND t3.nspname = ANY (current_schemas(false))
+ORDER BY c.conname
+[0m
+  [1m[35m (1.8ms)[0m  SELECT t2.oid::regclass::text AS to_table, a1.attname AS column, a2.attname AS primary_key, c.conname AS name, c.confupdtype AS on_update, c.confdeltype AS on_delete
+FROM pg_constraint c
+JOIN pg_class t1 ON c.conrelid = t1.oid
+JOIN pg_class t2 ON c.confrelid = t2.oid
+JOIN pg_attribute a1 ON a1.attnum = c.conkey[1] AND a1.attrelid = t1.oid
+JOIN pg_attribute a2 ON a2.attnum = c.confkey[1] AND a2.attrelid = t2.oid
+JOIN pg_namespace t3 ON c.connamespace = t3.oid
+WHERE c.contype = 'f'
+  AND t1.relname = 'order_statuses'
+  AND t3.nspname = ANY (current_schemas(false))
+ORDER BY c.conname
+
+  [1m[36m (1.8ms)[0m  [1mSELECT t2.oid::regclass::text AS to_table, a1.attname AS column, a2.attname AS primary_key, c.conname AS name, c.confupdtype AS on_update, c.confdeltype AS on_delete
+FROM pg_constraint c
+JOIN pg_class t1 ON c.conrelid = t1.oid
+JOIN pg_class t2 ON c.confrelid = t2.oid
+JOIN pg_attribute a1 ON a1.attnum = c.conkey[1] AND a1.attrelid = t1.oid
+JOIN pg_attribute a2 ON a2.attnum = c.confkey[1] AND a2.attrelid = t2.oid
+JOIN pg_namespace t3 ON c.connamespace = t3.oid
+WHERE c.contype = 'f'
+  AND t1.relname = 'orders'
+  AND t3.nspname = ANY (current_schemas(false))
+ORDER BY c.conname
+[0m
+  [1m[35m (1.8ms)[0m  SELECT t2.oid::regclass::text AS to_table, a1.attname AS column, a2.attname AS primary_key, c.conname AS name, c.confupdtype AS on_update, c.confdeltype AS on_delete
+FROM pg_constraint c
+JOIN pg_class t1 ON c.conrelid = t1.oid
+JOIN pg_class t2 ON c.confrelid = t2.oid
+JOIN pg_attribute a1 ON a1.attnum = c.conkey[1] AND a1.attrelid = t1.oid
+JOIN pg_attribute a2 ON a2.attnum = c.confkey[1] AND a2.attrelid = t2.oid
+JOIN pg_namespace t3 ON c.connamespace = t3.oid
+WHERE c.contype = 'f'
+  AND t1.relname = 'product_orders'
+  AND t3.nspname = ANY (current_schemas(false))
+ORDER BY c.conname
+
+  [1m[36m (1.7ms)[0m  [1mSELECT t2.oid::regclass::text AS to_table, a1.attname AS column, a2.attname AS primary_key, c.conname AS name, c.confupdtype AS on_update, c.confdeltype AS on_delete
+FROM pg_constraint c
+JOIN pg_class t1 ON c.conrelid = t1.oid
+JOIN pg_class t2 ON c.confrelid = t2.oid
+JOIN pg_attribute a1 ON a1.attnum = c.conkey[1] AND a1.attrelid = t1.oid
+JOIN pg_attribute a2 ON a2.attnum = c.confkey[1] AND a2.attrelid = t2.oid
+JOIN pg_namespace t3 ON c.connamespace = t3.oid
+WHERE c.contype = 'f'
+  AND t1.relname = 'products'
+  AND t3.nspname = ANY (current_schemas(false))
+ORDER BY c.conname
+[0m
+  [1m[35m (2.1ms)[0m  SELECT t2.oid::regclass::text AS to_table, a1.attname AS column, a2.attname AS primary_key, c.conname AS name, c.confupdtype AS on_update, c.confdeltype AS on_delete
+FROM pg_constraint c
+JOIN pg_class t1 ON c.conrelid = t1.oid
+JOIN pg_class t2 ON c.confrelid = t2.oid
+JOIN pg_attribute a1 ON a1.attnum = c.conkey[1] AND a1.attrelid = t1.oid
+JOIN pg_attribute a2 ON a2.attnum = c.confkey[1] AND a2.attrelid = t2.oid
+JOIN pg_namespace t3 ON c.connamespace = t3.oid
+WHERE c.contype = 'f'
+  AND t1.relname = 'users'
+  AND t3.nspname = ANY (current_schemas(false))
+ORDER BY c.conname
+
+  [1m[36mActiveRecord::SchemaMigration Load (0.4ms)[0m  [1mSELECT "schema_migrations".* FROM "schema_migrations"[0m
+  [1m[35mSQL (0.8ms)[0m  DELETE FROM "categories"
+  [1m[36mSQL (0.5ms)[0m  [1mDELETE FROM "products"[0m
+  [1m[35mSQL (0.4ms)[0m  DELETE FROM "users"
+  [1m[36mSQL (0.4ms)[0m  [1mDELETE FROM "order_statuses"[0m
+  [1m[35mSQL (0.5ms)[0m  DELETE FROM "orders"
+  [1m[36mSQL (0.4ms)[0m  [1mDELETE FROM "product_orders"[0m
+  [1m[35m (0.1ms)[0m  BEGIN
+  [1m[36mSQL (0.5ms)[0m  [1mINSERT INTO "order_statuses" ("name", "created_at", "updated_at") VALUES ($1, $2, $3) RETURNING "id"[0m  [["name", "Pending"], ["created_at", "2016-05-29 23:11:21.977844"], ["updated_at", "2016-05-29 23:11:21.977844"]]
+  [1m[35m (0.6ms)[0m  COMMIT
+  [1m[36m (0.2ms)[0m  [1mBEGIN[0m
+  [1m[35mSQL (0.4ms)[0m  INSERT INTO "order_statuses" ("name", "created_at", "updated_at") VALUES ($1, $2, $3) RETURNING "id"  [["name", "Processing"], ["created_at", "2016-05-29 23:11:21.991115"], ["updated_at", "2016-05-29 23:11:21.991115"]]
+  [1m[36m (0.5ms)[0m  [1mCOMMIT[0m
+  [1m[35m (0.1ms)[0m  BEGIN
+  [1m[36mSQL (0.2ms)[0m  [1mINSERT INTO "order_statuses" ("name", "created_at", "updated_at") VALUES ($1, $2, $3) RETURNING "id"[0m  [["name", "Canceled"], ["created_at", "2016-05-29 23:11:21.994325"], ["updated_at", "2016-05-29 23:11:21.994325"]]
+  [1m[35m (0.4ms)[0m  COMMIT
+  [1m[36m (0.1ms)[0m  [1mBEGIN[0m
+  [1m[35mSQL (0.2ms)[0m  INSERT INTO "order_statuses" ("name", "created_at", "updated_at") VALUES ($1, $2, $3) RETURNING "id"  [["name", "Completed"], ["created_at", "2016-05-29 23:11:21.996479"], ["updated_at", "2016-05-29 23:11:21.996479"]]
+  [1m[36m (0.4ms)[0m  [1mCOMMIT[0m
+  [1m[35m (0.1ms)[0m  BEGIN
+  [1m[36mCategory Exists (0.6ms)[0m  [1mSELECT  1 AS one FROM "categories" WHERE "categories"."name" = 'Sci-Fi' LIMIT 1[0m
+  [1m[35mSQL (0.4ms)[0m  INSERT INTO "categories" ("name", "created_at", "updated_at") VALUES ($1, $2, $3) RETURNING "id"  [["name", "Sci-Fi"], ["created_at", "2016-05-29 23:11:22.037011"], ["updated_at", "2016-05-29 23:11:22.037011"]]
+  [1m[36m (15.6ms)[0m  [1mCOMMIT[0m
+  [1m[35m (0.2ms)[0m  BEGIN
+  [1m[36mCategory Exists (0.4ms)[0m  [1mSELECT  1 AS one FROM "categories" WHERE "categories"."name" = 'Sports' LIMIT 1[0m
+  [1m[35mSQL (0.2ms)[0m  INSERT INTO "categories" ("name", "created_at", "updated_at") VALUES ($1, $2, $3) RETURNING "id"  [["name", "Sports"], ["created_at", "2016-05-29 23:11:22.056966"], ["updated_at", "2016-05-29 23:11:22.056966"]]
+  [1m[36m (0.4ms)[0m  [1mCOMMIT[0m
+  [1m[35m (0.1ms)[0m  BEGIN
+  [1m[36mCategory Exists (0.3ms)[0m  [1mSELECT  1 AS one FROM "categories" WHERE "categories"."name" = 'Superhero' LIMIT 1[0m
+  [1m[35mSQL (0.2ms)[0m  INSERT INTO "categories" ("name", "created_at", "updated_at") VALUES ($1, $2, $3) RETURNING "id"  [["name", "Superhero"], ["created_at", "2016-05-29 23:11:22.060299"], ["updated_at", "2016-05-29 23:11:22.060299"]]
+  [1m[36m (0.4ms)[0m  [1mCOMMIT[0m
+  [1m[35m (0.1ms)[0m  BEGIN
+  [1m[36mCategory Exists (0.2ms)[0m  [1mSELECT  1 AS one FROM "categories" WHERE "categories"."name" = 'School' LIMIT 1[0m
+  [1m[35mSQL (0.2ms)[0m  INSERT INTO "categories" ("name", "created_at", "updated_at") VALUES ($1, $2, $3) RETURNING "id"  [["name", "School"], ["created_at", "2016-05-29 23:11:22.063317"], ["updated_at", "2016-05-29 23:11:22.063317"]]
+  [1m[36m (0.5ms)[0m  [1mCOMMIT[0m
+  [1m[35m (0.1ms)[0m  BEGIN
+  [1m[36mCategory Exists (0.2ms)[0m  [1mSELECT  1 AS one FROM "categories" WHERE "categories"."name" = 'Kids' LIMIT 1[0m
+  [1m[35mSQL (0.2ms)[0m  INSERT INTO "categories" ("name", "created_at", "updated_at") VALUES ($1, $2, $3) RETURNING "id"  [["name", "Kids"], ["created_at", "2016-05-29 23:11:22.066342"], ["updated_at", "2016-05-29 23:11:22.066342"]]
+  [1m[36m (0.3ms)[0m  [1mCOMMIT[0m
+  [1m[35mCategory Load (0.3ms)[0m  SELECT  "categories".* FROM "categories" WHERE "categories"."name" = $1 LIMIT 1  [["name", "Sci-Fi"]]
+  [1m[36mCategory Load (0.4ms)[0m  [1mSELECT  "categories".* FROM "categories" WHERE "categories"."name" = $1 LIMIT 1[0m  [["name", "Kids"]]
+  [1m[35m (0.2ms)[0m  BEGIN
+  [1m[36mSQL (0.5ms)[0m  [1mINSERT INTO "products" ("name", "price", "description", "brand", "stock_count", "img_url", "created_at", "updated_at") VALUES ($1, $2, $3, $4, $5, $6, $7, $8) RETURNING "id"[0m  [["name", "Luke Skywalker T-Shirt"], ["price", "22.89"], ["description", "Switchable content-based customer loyalty"], ["brand", "Marvin, Kuphal and Braun"], ["stock_count", 10], ["img_url", "https://placehold.it/300x300.jpg/000"], ["created_at", "2016-05-29 23:11:22.610614"], ["updated_at", "2016-05-29 23:11:22.610614"]]
+  [1m[35m (14.9ms)[0m  COMMIT
+  [1m[36m (0.1ms)[0m  [1mBEGIN[0m
+  [1m[35mSQL (0.6ms)[0m  INSERT INTO "category_products" ("product_id", "category_id", "created_at", "updated_at") VALUES ($1, $2, $3, $4) RETURNING "id"  [["product_id", 1], ["category_id", 5], ["created_at", "2016-05-29 23:11:22.662986"], ["updated_at", "2016-05-29 23:11:22.662986"]]
+  [1m[36m (16.3ms)[0m  [1mCOMMIT[0m
+  [1m[35m (0.2ms)[0m  BEGIN
+  [1m[36mSQL (0.3ms)[0m  [1mINSERT INTO "category_products" ("product_id", "category_id", "created_at", "updated_at") VALUES ($1, $2, $3, $4) RETURNING "id"[0m  [["product_id", 1], ["category_id", 1], ["created_at", "2016-05-29 23:11:22.683529"], ["updated_at", "2016-05-29 23:11:22.683529"]]
+  [1m[35m (0.4ms)[0m  COMMIT
+  [1m[36mCategory Load (0.2ms)[0m  [1mSELECT  "categories".* FROM "categories" WHERE "categories"."name" = $1 LIMIT 1[0m  [["name", "Sci-Fi"]]
+  [1m[35mCategory Load (0.2ms)[0m  SELECT  "categories".* FROM "categories" WHERE "categories"."name" = $1 LIMIT 1  [["name", "Kids"]]
+  [1m[36m (0.1ms)[0m  [1mBEGIN[0m
+  [1m[35mSQL (0.2ms)[0m  INSERT INTO "products" ("name", "price", "description", "brand", "stock_count", "img_url", "created_at", "updated_at") VALUES ($1, $2, $3, $4, $5, $6, $7, $8) RETURNING "id"  [["name", "Anakin Skywalker T-Shirt"], ["price", "24.45"], ["description", "Focused disintermediate policy"], ["brand", "Kreiger-Mueller"], ["stock_count", 12], ["img_url", "https://placehold.it/300x300.jpg/000"], ["created_at", "2016-05-29 23:11:22.687832"], ["updated_at", "2016-05-29 23:11:22.687832"]]
+  [1m[36m (0.4ms)[0m  [1mCOMMIT[0m
+  [1m[35m (0.1ms)[0m  BEGIN
+  [1m[36mSQL (0.2ms)[0m  [1mINSERT INTO "category_products" ("product_id", "category_id", "created_at", "updated_at") VALUES ($1, $2, $3, $4) RETURNING "id"[0m  [["product_id", 2], ["category_id", 5], ["created_at", "2016-05-29 23:11:22.691594"], ["updated_at", "2016-05-29 23:11:22.691594"]]
+  [1m[35m (0.4ms)[0m  COMMIT
+  [1m[36m (0.1ms)[0m  [1mBEGIN[0m
+  [1m[35mSQL (0.2ms)[0m  INSERT INTO "category_products" ("product_id", "category_id", "created_at", "updated_at") VALUES ($1, $2, $3, $4) RETURNING "id"  [["product_id", 2], ["category_id", 1], ["created_at", "2016-05-29 23:11:22.694268"], ["updated_at", "2016-05-29 23:11:22.694268"]]
+  [1m[36m (0.4ms)[0m  [1mCOMMIT[0m
+  [1m[35mCategory Load (0.2ms)[0m  SELECT  "categories".* FROM "categories" WHERE "categories"."name" = $1 LIMIT 1  [["name", "Sci-Fi"]]
+  [1m[36mCategory Load (0.1ms)[0m  [1mSELECT  "categories".* FROM "categories" WHERE "categories"."name" = $1 LIMIT 1[0m  [["name", "Kids"]]
+  [1m[35m (0.1ms)[0m  BEGIN
+  [1m[36mSQL (0.2ms)[0m  [1mINSERT INTO "products" ("name", "price", "description", "brand", "stock_count", "img_url", "created_at", "updated_at") VALUES ($1, $2, $3, $4, $5, $6, $7, $8) RETURNING "id"[0m  [["name", "Rune Haako T-Shirt"], ["price", "11.99"], ["description", "Enterprise-wide radical neural-net"], ["brand", "Schaden-Marks"], ["stock_count", 15], ["img_url", "https://placehold.it/300x300.jpg/000"], ["created_at", "2016-05-29 23:11:22.697733"], ["updated_at", "2016-05-29 23:11:22.697733"]]
+  [1m[35m (0.4ms)[0m  COMMIT
+  [1m[36m (0.1ms)[0m  [1mBEGIN[0m
+  [1m[35mSQL (0.2ms)[0m  INSERT INTO "category_products" ("product_id", "category_id", "created_at", "updated_at") VALUES ($1, $2, $3, $4) RETURNING "id"  [["product_id", 3], ["category_id", 5], ["created_at", "2016-05-29 23:11:22.701189"], ["updated_at", "2016-05-29 23:11:22.701189"]]
+  [1m[36m (0.4ms)[0m  [1mCOMMIT[0m
+  [1m[35m (0.1ms)[0m  BEGIN
+  [1m[36mSQL (0.2ms)[0m  [1mINSERT INTO "category_products" ("product_id", "category_id", "created_at", "updated_at") VALUES ($1, $2, $3, $4) RETURNING "id"[0m  [["product_id", 3], ["category_id", 1], ["created_at", "2016-05-29 23:11:22.703945"], ["updated_at", "2016-05-29 23:11:22.703945"]]
+  [1m[35m (0.4ms)[0m  COMMIT
+  [1m[36mCategory Load (0.2ms)[0m  [1mSELECT  "categories".* FROM "categories" WHERE "categories"."name" = $1 LIMIT 1[0m  [["name", "Sci-Fi"]]
+  [1m[35mCategory Load (0.1ms)[0m  SELECT  "categories".* FROM "categories" WHERE "categories"."name" = $1 LIMIT 1  [["name", "Kids"]]
+  [1m[36m (0.1ms)[0m  [1mBEGIN[0m
+  [1m[35mSQL (0.2ms)[0m  INSERT INTO "products" ("name", "price", "description", "brand", "stock_count", "img_url", "created_at", "updated_at") VALUES ($1, $2, $3, $4, $5, $6, $7, $8) RETURNING "id"  [["name", "Jar Jar Binks T-Shirt"], ["price", "24.45"], ["description", "Inverse mobile workforce"], ["brand", "Stanton-Trantow"], ["stock_count", 11], ["img_url", "https://placehold.it/300x300.jpg/000"], ["created_at", "2016-05-29 23:11:22.707267"], ["updated_at", "2016-05-29 23:11:22.707267"]]
+  [1m[36m (0.4ms)[0m  [1mCOMMIT[0m
+  [1m[35m (0.1ms)[0m  BEGIN
+  [1m[36mSQL (0.2ms)[0m  [1mINSERT INTO "category_products" ("product_id", "category_id", "created_at", "updated_at") VALUES ($1, $2, $3, $4) RETURNING "id"[0m  [["product_id", 4], ["category_id", 5], ["created_at", "2016-05-29 23:11:22.711469"], ["updated_at", "2016-05-29 23:11:22.711469"]]
+  [1m[35m (0.4ms)[0m  COMMIT
+  [1m[36m (0.1ms)[0m  [1mBEGIN[0m
+  [1m[35mSQL (0.2ms)[0m  INSERT INTO "category_products" ("product_id", "category_id", "created_at", "updated_at") VALUES ($1, $2, $3, $4) RETURNING "id"  [["product_id", 4], ["category_id", 1], ["created_at", "2016-05-29 23:11:22.714339"], ["updated_at", "2016-05-29 23:11:22.714339"]]
+  [1m[36m (0.4ms)[0m  [1mCOMMIT[0m
+  [1m[35mCategory Load (0.2ms)[0m  SELECT  "categories".* FROM "categories" WHERE "categories"."name" = $1 LIMIT 1  [["name", "Sci-Fi"]]
+  [1m[36mCategory Load (0.1ms)[0m  [1mSELECT  "categories".* FROM "categories" WHERE "categories"."name" = $1 LIMIT 1[0m  [["name", "Kids"]]
+  [1m[35m (0.1ms)[0m  BEGIN
+  [1m[36mSQL (0.2ms)[0m  [1mINSERT INTO "products" ("name", "price", "description", "brand", "stock_count", "img_url", "created_at", "updated_at") VALUES ($1, $2, $3, $4, $5, $6, $7, $8) RETURNING "id"[0m  [["name", "Rune Haako T-Shirt"], ["price", "11.99"], ["description", "Business-focused cohesive installation"], ["brand", "Gleichner-Mohr"], ["stock_count", 6], ["img_url", "https://placehold.it/300x300.jpg/000"], ["created_at", "2016-05-29 23:11:22.717607"], ["updated_at", "2016-05-29 23:11:22.717607"]]
+  [1m[35m (0.4ms)[0m  COMMIT
+  [1m[36m (0.1ms)[0m  [1mBEGIN[0m
+  [1m[35mSQL (0.2ms)[0m  INSERT INTO "category_products" ("product_id", "category_id", "created_at", "updated_at") VALUES ($1, $2, $3, $4) RETURNING "id"  [["product_id", 5], ["category_id", 5], ["created_at", "2016-05-29 23:11:22.721177"], ["updated_at", "2016-05-29 23:11:22.721177"]]
+  [1m[36m (0.4ms)[0m  [1mCOMMIT[0m
+  [1m[35m (0.1ms)[0m  BEGIN
+  [1m[36mSQL (0.2ms)[0m  [1mINSERT INTO "category_products" ("product_id", "category_id", "created_at", "updated_at") VALUES ($1, $2, $3, $4) RETURNING "id"[0m  [["product_id", 5], ["category_id", 1], ["created_at", "2016-05-29 23:11:22.723624"], ["updated_at", "2016-05-29 23:11:22.723624"]]
+  [1m[35m (0.4ms)[0m  COMMIT
+  [1m[36mCategory Load (0.1ms)[0m  [1mSELECT  "categories".* FROM "categories" WHERE "categories"."name" = $1 LIMIT 1[0m  [["name", "Sci-Fi"]]
+  [1m[35mCategory Load (0.1ms)[0m  SELECT  "categories".* FROM "categories" WHERE "categories"."name" = $1 LIMIT 1  [["name", "Kids"]]
+  [1m[36m (0.1ms)[0m  [1mBEGIN[0m
+  [1m[35mSQL (0.2ms)[0m  INSERT INTO "products" ("name", "price", "description", "brand", "stock_count", "img_url", "created_at", "updated_at") VALUES ($1, $2, $3, $4, $5, $6, $7, $8) RETURNING "id"  [["name", "Boba Fett T-Shirt"], ["price", "11.99"], ["description", "Centralized contextually-based paradigm"], ["brand", "Parisian-Luettgen"], ["stock_count", 11], ["img_url", "https://placehold.it/300x300.jpg/000"], ["created_at", "2016-05-29 23:11:22.726786"], ["updated_at", "2016-05-29 23:11:22.726786"]]
+  [1m[36m (0.4ms)[0m  [1mCOMMIT[0m
+  [1m[35m (0.1ms)[0m  BEGIN
+  [1m[36mSQL (0.2ms)[0m  [1mINSERT INTO "category_products" ("product_id", "category_id", "created_at", "updated_at") VALUES ($1, $2, $3, $4) RETURNING "id"[0m  [["product_id", 6], ["category_id", 5], ["created_at", "2016-05-29 23:11:22.730286"], ["updated_at", "2016-05-29 23:11:22.730286"]]
+  [1m[35m (0.4ms)[0m  COMMIT
+  [1m[36m (0.1ms)[0m  [1mBEGIN[0m
+  [1m[35mSQL (0.2ms)[0m  INSERT INTO "category_products" ("product_id", "category_id", "created_at", "updated_at") VALUES ($1, $2, $3, $4) RETURNING "id"  [["product_id", 6], ["category_id", 1], ["created_at", "2016-05-29 23:11:22.732805"], ["updated_at", "2016-05-29 23:11:22.732805"]]
+  [1m[36m (0.4ms)[0m  [1mCOMMIT[0m
+  [1m[35mCategory Load (0.1ms)[0m  SELECT  "categories".* FROM "categories" WHERE "categories"."name" = $1 LIMIT 1  [["name", "Sci-Fi"]]
+  [1m[36mCategory Load (0.1ms)[0m  [1mSELECT  "categories".* FROM "categories" WHERE "categories"."name" = $1 LIMIT 1[0m  [["name", "Kids"]]
+  [1m[35m (0.1ms)[0m  BEGIN
+  [1m[36mSQL (0.2ms)[0m  [1mINSERT INTO "products" ("name", "price", "description", "brand", "stock_count", "img_url", "created_at", "updated_at") VALUES ($1, $2, $3, $4, $5, $6, $7, $8) RETURNING "id"[0m  [["name", "Borvo the Hutt T-Shirt"], ["price", "22.89"], ["description", "Diverse encompassing approach"], ["brand", "Braun, Waters and Hayes"], ["stock_count", 14], ["img_url", "https://placehold.it/300x300.jpg/000"], ["created_at", "2016-05-29 23:11:22.736138"], ["updated_at", "2016-05-29 23:11:22.736138"]]
+  [1m[35m (0.4ms)[0m  COMMIT
+  [1m[36m (0.1ms)[0m  [1mBEGIN[0m
+  [1m[35mSQL (0.2ms)[0m  INSERT INTO "category_products" ("product_id", "category_id", "created_at", "updated_at") VALUES ($1, $2, $3, $4) RETURNING "id"  [["product_id", 7], ["category_id", 5], ["created_at", "2016-05-29 23:11:22.739532"], ["updated_at", "2016-05-29 23:11:22.739532"]]
+  [1m[36m (0.4ms)[0m  [1mCOMMIT[0m
+  [1m[35m (0.1ms)[0m  BEGIN
+  [1m[36mSQL (0.2ms)[0m  [1mINSERT INTO "category_products" ("product_id", "category_id", "created_at", "updated_at") VALUES ($1, $2, $3, $4) RETURNING "id"[0m  [["product_id", 7], ["category_id", 1], ["created_at", "2016-05-29 23:11:22.742106"], ["updated_at", "2016-05-29 23:11:22.742106"]]
+  [1m[35m (0.4ms)[0m  COMMIT
+  [1m[36mCategory Load (0.2ms)[0m  [1mSELECT  "categories".* FROM "categories" WHERE "categories"."name" = $1 LIMIT 1[0m  [["name", "Sci-Fi"]]
+  [1m[35mCategory Load (0.1ms)[0m  SELECT  "categories".* FROM "categories" WHERE "categories"."name" = $1 LIMIT 1  [["name", "Kids"]]
+  [1m[36m (0.1ms)[0m  [1mBEGIN[0m
+  [1m[35mSQL (0.2ms)[0m  INSERT INTO "products" ("name", "price", "description", "brand", "stock_count", "img_url", "created_at", "updated_at") VALUES ($1, $2, $3, $4, $5, $6, $7, $8) RETURNING "id"  [["name", "Darth Sidious T-Shirt"], ["price", "16.56"], ["description", "Mandatory logistical interface"], ["brand", "Ankunding-Fahey"], ["stock_count", 6], ["img_url", "https://placehold.it/300x300.jpg/000"], ["created_at", "2016-05-29 23:11:22.746048"], ["updated_at", "2016-05-29 23:11:22.746048"]]
+  [1m[36m (0.4ms)[0m  [1mCOMMIT[0m
+  [1m[35m (0.1ms)[0m  BEGIN
+  [1m[36mSQL (0.2ms)[0m  [1mINSERT INTO "category_products" ("product_id", "category_id", "created_at", "updated_at") VALUES ($1, $2, $3, $4) RETURNING "id"[0m  [["product_id", 8], ["category_id", 5], ["created_at", "2016-05-29 23:11:22.749971"], ["updated_at", "2016-05-29 23:11:22.749971"]]
+  [1m[35m (0.4ms)[0m  COMMIT
+  [1m[36m (0.1ms)[0m  [1mBEGIN[0m
+  [1m[35mSQL (0.2ms)[0m  INSERT INTO "category_products" ("product_id", "category_id", "created_at", "updated_at") VALUES ($1, $2, $3, $4) RETURNING "id"  [["product_id", 8], ["category_id", 1], ["created_at", "2016-05-29 23:11:22.752652"], ["updated_at", "2016-05-29 23:11:22.752652"]]
+  [1m[36m (0.5ms)[0m  [1mCOMMIT[0m
+  [1m[35mCategory Load (0.2ms)[0m  SELECT  "categories".* FROM "categories" WHERE "categories"."name" = $1 LIMIT 1  [["name", "Sci-Fi"]]
+  [1m[36mCategory Load (0.1ms)[0m  [1mSELECT  "categories".* FROM "categories" WHERE "categories"."name" = $1 LIMIT 1[0m  [["name", "Kids"]]
+  [1m[35m (0.1ms)[0m  BEGIN
+  [1m[36mSQL (0.2ms)[0m  [1mINSERT INTO "products" ("name", "price", "description", "brand", "stock_count", "img_url", "created_at", "updated_at") VALUES ($1, $2, $3, $4, $5, $6, $7, $8) RETURNING "id"[0m  [["name", "Chewbacca T-Shirt"], ["price", "16.56"], ["description", "Ameliorated bandwidth-monitored leverage"], ["brand", "Conn, Howe and Wiza"], ["stock_count", 11], ["img_url", "https://placehold.it/300x300.jpg/000"], ["created_at", "2016-05-29 23:11:22.756133"], ["updated_at", "2016-05-29 23:11:22.756133"]]
+  [1m[35m (0.4ms)[0m  COMMIT
+  [1m[36m (0.1ms)[0m  [1mBEGIN[0m
+  [1m[35mSQL (0.2ms)[0m  INSERT INTO "category_products" ("product_id", "category_id", "created_at", "updated_at") VALUES ($1, $2, $3, $4) RETURNING "id"  [["product_id", 9], ["category_id", 5], ["created_at", "2016-05-29 23:11:22.759575"], ["updated_at", "2016-05-29 23:11:22.759575"]]
+  [1m[36m (0.4ms)[0m  [1mCOMMIT[0m
+  [1m[35m (0.1ms)[0m  BEGIN
+  [1m[36mSQL (0.2ms)[0m  [1mINSERT INTO "category_products" ("product_id", "category_id", "created_at", "updated_at") VALUES ($1, $2, $3, $4) RETURNING "id"[0m  [["product_id", 9], ["category_id", 1], ["created_at", "2016-05-29 23:11:22.762176"], ["updated_at", "2016-05-29 23:11:22.762176"]]
+  [1m[35m (0.4ms)[0m  COMMIT
+  [1m[36mCategory Load (0.1ms)[0m  [1mSELECT  "categories".* FROM "categories" WHERE "categories"."name" = $1 LIMIT 1[0m  [["name", "Sci-Fi"]]
+  [1m[35mCategory Load (0.1ms)[0m  SELECT  "categories".* FROM "categories" WHERE "categories"."name" = $1 LIMIT 1  [["name", "Kids"]]
+  [1m[36m (0.1ms)[0m  [1mBEGIN[0m
+  [1m[35mSQL (0.2ms)[0m  INSERT INTO "products" ("name", "price", "description", "brand", "stock_count", "img_url", "created_at", "updated_at") VALUES ($1, $2, $3, $4, $5, $6, $7, $8) RETURNING "id"  [["name", "Nute Gunray T-Shirt"], ["price", "16.56"], ["description", "Up-sized neutral knowledge base"], ["brand", "Kovacek and Sons"], ["stock_count", 11], ["img_url", "https://placehold.it/300x300.jpg/000"], ["created_at", "2016-05-29 23:11:22.765320"], ["updated_at", "2016-05-29 23:11:22.765320"]]
+  [1m[36m (0.4ms)[0m  [1mCOMMIT[0m
+  [1m[35m (0.2ms)[0m  BEGIN
+  [1m[36mSQL (0.2ms)[0m  [1mINSERT INTO "category_products" ("product_id", "category_id", "created_at", "updated_at") VALUES ($1, $2, $3, $4) RETURNING "id"[0m  [["product_id", 10], ["category_id", 5], ["created_at", "2016-05-29 23:11:22.768769"], ["updated_at", "2016-05-29 23:11:22.768769"]]
+  [1m[35m (0.4ms)[0m  COMMIT
+  [1m[36m (0.1ms)[0m  [1mBEGIN[0m
+  [1m[35mSQL (0.2ms)[0m  INSERT INTO "category_products" ("product_id", "category_id", "created_at", "updated_at") VALUES ($1, $2, $3, $4) RETURNING "id"  [["product_id", 10], ["category_id", 1], ["created_at", "2016-05-29 23:11:22.771359"], ["updated_at", "2016-05-29 23:11:22.771359"]]
+  [1m[36m (0.4ms)[0m  [1mCOMMIT[0m
+  [1m[35mCategory Load (0.1ms)[0m  SELECT  "categories".* FROM "categories" WHERE "categories"."name" = $1 LIMIT 1  [["name", "Sci-Fi"]]
+  [1m[36mCategory Load (0.2ms)[0m  [1mSELECT  "categories".* FROM "categories" WHERE "categories"."name" = $1 LIMIT 1[0m  [["name", "Kids"]]
+  [1m[35m (0.1ms)[0m  BEGIN
+  [1m[36mSQL (0.2ms)[0m  [1mINSERT INTO "products" ("name", "price", "description", "brand", "stock_count", "img_url", "created_at", "updated_at") VALUES ($1, $2, $3, $4, $5, $6, $7, $8) RETURNING "id"[0m  [["name", "Jango Fett T-Shirt"], ["price", "11.99"], ["description", "Enterprise-wide value-added Graphical User Interface"], ["brand", "Crist-Douglas"], ["stock_count", 9], ["img_url", "https://placehold.it/300x300.jpg/000"], ["created_at", "2016-05-29 23:11:22.774840"], ["updated_at", "2016-05-29 23:11:22.774840"]]
+  [1m[35m (0.5ms)[0m  COMMIT
+  [1m[36m (0.1ms)[0m  [1mBEGIN[0m
+  [1m[35mSQL (0.2ms)[0m  INSERT INTO "category_products" ("product_id", "category_id", "created_at", "updated_at") VALUES ($1, $2, $3, $4) RETURNING "id"  [["product_id", 11], ["category_id", 5], ["created_at", "2016-05-29 23:11:22.779046"], ["updated_at", "2016-05-29 23:11:22.779046"]]
+  [1m[36m (0.5ms)[0m  [1mCOMMIT[0m
+  [1m[35m (0.1ms)[0m  BEGIN
+  [1m[36mSQL (0.2ms)[0m  [1mINSERT INTO "category_products" ("product_id", "category_id", "created_at", "updated_at") VALUES ($1, $2, $3, $4) RETURNING "id"[0m  [["product_id", 11], ["category_id", 1], ["created_at", "2016-05-29 23:11:22.781902"], ["updated_at", "2016-05-29 23:11:22.781902"]]
+  [1m[35m (0.4ms)[0m  COMMIT
+  [1m[36mCategory Load (0.1ms)[0m  [1mSELECT  "categories".* FROM "categories" WHERE "categories"."name" = $1 LIMIT 1[0m  [["name", "Sci-Fi"]]
+  [1m[35mCategory Load (0.1ms)[0m  SELECT  "categories".* FROM "categories" WHERE "categories"."name" = $1 LIMIT 1  [["name", "Kids"]]
+  [1m[36m (0.1ms)[0m  [1mBEGIN[0m
+  [1m[35mSQL (0.2ms)[0m  INSERT INTO "products" ("name", "price", "description", "brand", "stock_count", "img_url", "created_at", "updated_at") VALUES ($1, $2, $3, $4, $5, $6, $7, $8) RETURNING "id"  [["name", "Darth Maul T-Shirt"], ["price", "11.99"], ["description", "Persistent multi-tasking website"], ["brand", "Aufderhar Group"], ["stock_count", 12], ["img_url", "https://placehold.it/300x300.jpg/000"], ["created_at", "2016-05-29 23:11:22.785133"], ["updated_at", "2016-05-29 23:11:22.785133"]]
+  [1m[36m (0.5ms)[0m  [1mCOMMIT[0m
+  [1m[35m (0.1ms)[0m  BEGIN
+  [1m[36mSQL (0.2ms)[0m  [1mINSERT INTO "category_products" ("product_id", "category_id", "created_at", "updated_at") VALUES ($1, $2, $3, $4) RETURNING "id"[0m  [["product_id", 12], ["category_id", 5], ["created_at", "2016-05-29 23:11:22.789535"], ["updated_at", "2016-05-29 23:11:22.789535"]]
+  [1m[35m (0.4ms)[0m  COMMIT
+  [1m[36m (0.1ms)[0m  [1mBEGIN[0m
+  [1m[35mSQL (0.2ms)[0m  INSERT INTO "category_products" ("product_id", "category_id", "created_at", "updated_at") VALUES ($1, $2, $3, $4) RETURNING "id"  [["product_id", 12], ["category_id", 1], ["created_at", "2016-05-29 23:11:22.792511"], ["updated_at", "2016-05-29 23:11:22.792511"]]
+  [1m[36m (0.4ms)[0m  [1mCOMMIT[0m
+  [1m[35mCategory Load (0.1ms)[0m  SELECT  "categories".* FROM "categories" WHERE "categories"."name" = $1 LIMIT 1  [["name", "Sci-Fi"]]
+  [1m[36mCategory Load (0.1ms)[0m  [1mSELECT  "categories".* FROM "categories" WHERE "categories"."name" = $1 LIMIT 1[0m  [["name", "Kids"]]
+  [1m[35m (0.1ms)[0m  BEGIN
+  [1m[36mSQL (0.2ms)[0m  [1mINSERT INTO "products" ("name", "price", "description", "brand", "stock_count", "img_url", "created_at", "updated_at") VALUES ($1, $2, $3, $4, $5, $6, $7, $8) RETURNING "id"[0m  [["name", "Darth Caedus T-Shirt"], ["price", "11.99"], ["description", "Public-key optimal circuit"], ["brand", "Pfannerstill-Wintheiser"], ["stock_count", 12], ["img_url", "https://placehold.it/300x300.jpg/000"], ["created_at", "2016-05-29 23:11:22.795848"], ["updated_at", "2016-05-29 23:11:22.795848"]]
+  [1m[35m (0.4ms)[0m  COMMIT
+  [1m[36m (0.1ms)[0m  [1mBEGIN[0m
+  [1m[35mSQL (0.2ms)[0m  INSERT INTO "category_products" ("product_id", "category_id", "created_at", "updated_at") VALUES ($1, $2, $3, $4) RETURNING "id"  [["product_id", 13], ["category_id", 5], ["created_at", "2016-05-29 23:11:22.799226"], ["updated_at", "2016-05-29 23:11:22.799226"]]
+  [1m[36m (0.4ms)[0m  [1mCOMMIT[0m
+  [1m[35m (0.1ms)[0m  BEGIN
+  [1m[36mSQL (0.2ms)[0m  [1mINSERT INTO "category_products" ("product_id", "category_id", "created_at", "updated_at") VALUES ($1, $2, $3, $4) RETURNING "id"[0m  [["product_id", 13], ["category_id", 1], ["created_at", "2016-05-29 23:11:22.801815"], ["updated_at", "2016-05-29 23:11:22.801815"]]
+  [1m[35m (0.4ms)[0m  COMMIT
+  [1m[36mCategory Load (0.2ms)[0m  [1mSELECT  "categories".* FROM "categories" WHERE "categories"."name" = $1 LIMIT 1[0m  [["name", "Sci-Fi"]]
+  [1m[35mCategory Load (0.1ms)[0m  SELECT  "categories".* FROM "categories" WHERE "categories"."name" = $1 LIMIT 1  [["name", "Kids"]]
+  [1m[36m (0.1ms)[0m  [1mBEGIN[0m
+  [1m[35mSQL (0.2ms)[0m  INSERT INTO "products" ("name", "price", "description", "brand", "stock_count", "img_url", "created_at", "updated_at") VALUES ($1, $2, $3, $4, $5, $6, $7, $8) RETURNING "id"  [["name", "Darth Sidious T-Shirt"], ["price", "16.56"], ["description", "Enhanced needs-based artificial intelligence"], ["brand", "Koelpin-Lemke"], ["stock_count", 12], ["img_url", "https://placehold.it/300x300.jpg/000"], ["created_at", "2016-05-29 23:11:22.805066"], ["updated_at", "2016-05-29 23:11:22.805066"]]
+  [1m[36m (0.4ms)[0m  [1mCOMMIT[0m
+  [1m[35m (0.1ms)[0m  BEGIN
+  [1m[36mSQL (0.2ms)[0m  [1mINSERT INTO "category_products" ("product_id", "category_id", "created_at", "updated_at") VALUES ($1, $2, $3, $4) RETURNING "id"[0m  [["product_id", 14], ["category_id", 5], ["created_at", "2016-05-29 23:11:22.808374"], ["updated_at", "2016-05-29 23:11:22.808374"]]
+  [1m[35m (0.7ms)[0m  COMMIT
+  [1m[36m (0.1ms)[0m  [1mBEGIN[0m
+  [1m[35mSQL (0.2ms)[0m  INSERT INTO "category_products" ("product_id", "category_id", "created_at", "updated_at") VALUES ($1, $2, $3, $4) RETURNING "id"  [["product_id", 14], ["category_id", 1], ["created_at", "2016-05-29 23:11:22.811540"], ["updated_at", "2016-05-29 23:11:22.811540"]]
+  [1m[36m (0.5ms)[0m  [1mCOMMIT[0m
+  [1m[35mCategory Load (0.1ms)[0m  SELECT  "categories".* FROM "categories" WHERE "categories"."name" = $1 LIMIT 1  [["name", "Sci-Fi"]]
+  [1m[36mCategory Load (0.1ms)[0m  [1mSELECT  "categories".* FROM "categories" WHERE "categories"."name" = $1 LIMIT 1[0m  [["name", "Kids"]]
+  [1m[35m (0.1ms)[0m  BEGIN
+  [1m[36mSQL (0.2ms)[0m  [1mINSERT INTO "products" ("name", "price", "description", "brand", "stock_count", "img_url", "created_at", "updated_at") VALUES ($1, $2, $3, $4, $5, $6, $7, $8) RETURNING "id"[0m  [["name", "Borvo the Hutt T-Shirt"], ["price", "22.89"], ["description", "Devolved methodical strategy"], ["brand", "Simonis Group"], ["stock_count", 15], ["img_url", "https://placehold.it/300x300.jpg/000"], ["created_at", "2016-05-29 23:11:22.814996"], ["updated_at", "2016-05-29 23:11:22.814996"]]
+  [1m[35m (0.4ms)[0m  COMMIT
+  [1m[36m (0.1ms)[0m  [1mBEGIN[0m
+  [1m[35mSQL (0.2ms)[0m  INSERT INTO "category_products" ("product_id", "category_id", "created_at", "updated_at") VALUES ($1, $2, $3, $4) RETURNING "id"  [["product_id", 15], ["category_id", 5], ["created_at", "2016-05-29 23:11:22.818498"], ["updated_at", "2016-05-29 23:11:22.818498"]]
+  [1m[36m (0.4ms)[0m  [1mCOMMIT[0m
+  [1m[35m (0.1ms)[0m  BEGIN
+  [1m[36mSQL (0.2ms)[0m  [1mINSERT INTO "category_products" ("product_id", "category_id", "created_at", "updated_at") VALUES ($1, $2, $3, $4) RETURNING "id"[0m  [["product_id", 15], ["category_id", 1], ["created_at", "2016-05-29 23:11:22.821143"], ["updated_at", "2016-05-29 23:11:22.821143"]]
+  [1m[35m (0.4ms)[0m  COMMIT
+  [1m[36mCategory Load (0.2ms)[0m  [1mSELECT  "categories".* FROM "categories" WHERE "categories"."name" = $1 LIMIT 1[0m  [["name", "Sci-Fi"]]
+  [1m[35mCategory Load (0.1ms)[0m  SELECT  "categories".* FROM "categories" WHERE "categories"."name" = $1 LIMIT 1  [["name", "Kids"]]
+  [1m[36m (0.1ms)[0m  [1mBEGIN[0m
+  [1m[35mSQL (0.2ms)[0m  INSERT INTO "products" ("name", "price", "description", "brand", "stock_count", "img_url", "created_at", "updated_at") VALUES ($1, $2, $3, $4, $5, $6, $7, $8) RETURNING "id"  [["name", "Kylo Ren T-Shirt"], ["price", "16.56"], ["description", "Virtual stable Graphical User Interface"], ["brand", "Cronin-Little"], ["stock_count", 8], ["img_url", "https://placehold.it/300x300.jpg/000"], ["created_at", "2016-05-29 23:11:22.824376"], ["updated_at", "2016-05-29 23:11:22.824376"]]
+  [1m[36m (0.4ms)[0m  [1mCOMMIT[0m
+  [1m[35m (0.1ms)[0m  BEGIN
+  [1m[36mSQL (0.2ms)[0m  [1mINSERT INTO "category_products" ("product_id", "category_id", "created_at", "updated_at") VALUES ($1, $2, $3, $4) RETURNING "id"[0m  [["product_id", 16], ["category_id", 5], ["created_at", "2016-05-29 23:11:22.827739"], ["updated_at", "2016-05-29 23:11:22.827739"]]
+  [1m[35m (0.4ms)[0m  COMMIT
+  [1m[36m (0.1ms)[0m  [1mBEGIN[0m
+  [1m[35mSQL (0.2ms)[0m  INSERT INTO "category_products" ("product_id", "category_id", "created_at", "updated_at") VALUES ($1, $2, $3, $4) RETURNING "id"  [["product_id", 16], ["category_id", 1], ["created_at", "2016-05-29 23:11:22.830352"], ["updated_at", "2016-05-29 23:11:22.830352"]]
+  [1m[36m (0.4ms)[0m  [1mCOMMIT[0m
+  [1m[35mCategory Load (0.1ms)[0m  SELECT  "categories".* FROM "categories" WHERE "categories"."name" = $1 LIMIT 1  [["name", "Sci-Fi"]]
+  [1m[36mCategory Load (0.1ms)[0m  [1mSELECT  "categories".* FROM "categories" WHERE "categories"."name" = $1 LIMIT 1[0m  [["name", "Kids"]]
+  [1m[35m (0.1ms)[0m  BEGIN
+  [1m[36mSQL (0.2ms)[0m  [1mINSERT INTO "products" ("name", "price", "description", "brand", "stock_count", "img_url", "created_at", "updated_at") VALUES ($1, $2, $3, $4, $5, $6, $7, $8) RETURNING "id"[0m  [["name", "Jango Fett T-Shirt"], ["price", "22.89"], ["description", "Cross-group even-keeled Graphical User Interface"], ["brand", "Sauer-Goodwin"], ["stock_count", 20], ["img_url", "https://placehold.it/300x300.jpg/000"], ["created_at", "2016-05-29 23:11:22.833612"], ["updated_at", "2016-05-29 23:11:22.833612"]]
+  [1m[35m (0.4ms)[0m  COMMIT
+  [1m[36m (0.1ms)[0m  [1mBEGIN[0m
+  [1m[35mSQL (0.2ms)[0m  INSERT INTO "category_products" ("product_id", "category_id", "created_at", "updated_at") VALUES ($1, $2, $3, $4) RETURNING "id"  [["product_id", 17], ["category_id", 5], ["created_at", "2016-05-29 23:11:22.836886"], ["updated_at", "2016-05-29 23:11:22.836886"]]
+  [1m[36m (0.4ms)[0m  [1mCOMMIT[0m
+  [1m[35m (0.1ms)[0m  BEGIN
+  [1m[36mSQL (0.2ms)[0m  [1mINSERT INTO "category_products" ("product_id", "category_id", "created_at", "updated_at") VALUES ($1, $2, $3, $4) RETURNING "id"[0m  [["product_id", 17], ["category_id", 1], ["created_at", "2016-05-29 23:11:22.839448"], ["updated_at", "2016-05-29 23:11:22.839448"]]
+  [1m[35m (0.4ms)[0m  COMMIT
+  [1m[36mCategory Load (0.1ms)[0m  [1mSELECT  "categories".* FROM "categories" WHERE "categories"."name" = $1 LIMIT 1[0m  [["name", "Sci-Fi"]]
+  [1m[35mCategory Load (0.1ms)[0m  SELECT  "categories".* FROM "categories" WHERE "categories"."name" = $1 LIMIT 1  [["name", "Kids"]]
+  [1m[36m (0.1ms)[0m  [1mBEGIN[0m
+  [1m[35mSQL (0.2ms)[0m  INSERT INTO "products" ("name", "price", "description", "brand", "stock_count", "img_url", "created_at", "updated_at") VALUES ($1, $2, $3, $4, $5, $6, $7, $8) RETURNING "id"  [["name", "Jango Fett T-Shirt"], ["price", "24.45"], ["description", "Vision-oriented regional standardization"], ["brand", "Kling-Sporer"], ["stock_count", 14], ["img_url", "https://placehold.it/300x300.jpg/000"], ["created_at", "2016-05-29 23:11:22.842676"], ["updated_at", "2016-05-29 23:11:22.842676"]]
+  [1m[36m (0.4ms)[0m  [1mCOMMIT[0m
+  [1m[35m (0.3ms)[0m  BEGIN
+  [1m[36mSQL (0.2ms)[0m  [1mINSERT INTO "category_products" ("product_id", "category_id", "created_at", "updated_at") VALUES ($1, $2, $3, $4) RETURNING "id"[0m  [["product_id", 18], ["category_id", 5], ["created_at", "2016-05-29 23:11:22.846642"], ["updated_at", "2016-05-29 23:11:22.846642"]]
+  [1m[35m (0.4ms)[0m  COMMIT
+  [1m[36m (0.1ms)[0m  [1mBEGIN[0m
+  [1m[35mSQL (0.2ms)[0m  INSERT INTO "category_products" ("product_id", "category_id", "created_at", "updated_at") VALUES ($1, $2, $3, $4) RETURNING "id"  [["product_id", 18], ["category_id", 1], ["created_at", "2016-05-29 23:11:22.849425"], ["updated_at", "2016-05-29 23:11:22.849425"]]
+  [1m[36m (0.4ms)[0m  [1mCOMMIT[0m
+  [1m[35mCategory Load (0.1ms)[0m  SELECT  "categories".* FROM "categories" WHERE "categories"."name" = $1 LIMIT 1  [["name", "Sci-Fi"]]
+  [1m[36mCategory Load (0.1ms)[0m  [1mSELECT  "categories".* FROM "categories" WHERE "categories"."name" = $1 LIMIT 1[0m  [["name", "Kids"]]
+  [1m[35m (0.1ms)[0m  BEGIN
+  [1m[36mSQL (0.2ms)[0m  [1mINSERT INTO "products" ("name", "price", "description", "brand", "stock_count", "img_url", "created_at", "updated_at") VALUES ($1, $2, $3, $4, $5, $6, $7, $8) RETURNING "id"[0m  [["name", "Padme Amidala T-Shirt"], ["price", "11.99"], ["description", "Cross-group zero defect time-frame"], ["brand", "O'Reilly, Gislason and Cormier"], ["stock_count", 8], ["img_url", "https://placehold.it/300x300.jpg/000"], ["created_at", "2016-05-29 23:11:22.852781"], ["updated_at", "2016-05-29 23:11:22.852781"]]
+  [1m[35m (1.0ms)[0m  COMMIT
+  [1m[36m (0.1ms)[0m  [1mBEGIN[0m
+  [1m[35mSQL (0.2ms)[0m  INSERT INTO "category_products" ("product_id", "category_id", "created_at", "updated_at") VALUES ($1, $2, $3, $4) RETURNING "id"  [["product_id", 19], ["category_id", 5], ["created_at", "2016-05-29 23:11:22.856864"], ["updated_at", "2016-05-29 23:11:22.856864"]]
+  [1m[36m (0.4ms)[0m  [1mCOMMIT[0m
+  [1m[35m (0.1ms)[0m  BEGIN
+  [1m[36mSQL (0.2ms)[0m  [1mINSERT INTO "category_products" ("product_id", "category_id", "created_at", "updated_at") VALUES ($1, $2, $3, $4) RETURNING "id"[0m  [["product_id", 19], ["category_id", 1], ["created_at", "2016-05-29 23:11:22.859479"], ["updated_at", "2016-05-29 23:11:22.859479"]]
+  [1m[35m (0.4ms)[0m  COMMIT
+  [1m[36mCategory Load (0.1ms)[0m  [1mSELECT  "categories".* FROM "categories" WHERE "categories"."name" = $1 LIMIT 1[0m  [["name", "Sci-Fi"]]
+  [1m[35mCategory Load (0.1ms)[0m  SELECT  "categories".* FROM "categories" WHERE "categories"."name" = $1 LIMIT 1  [["name", "Kids"]]
+  [1m[36m (0.1ms)[0m  [1mBEGIN[0m
+  [1m[35mSQL (0.2ms)[0m  INSERT INTO "products" ("name", "price", "description", "brand", "stock_count", "img_url", "created_at", "updated_at") VALUES ($1, $2, $3, $4, $5, $6, $7, $8) RETURNING "id"  [["name", "Ki-Adi-Mundi T-Shirt"], ["price", "22.89"], ["description", "Progressive cohesive installation"], ["brand", "Gulgowski and Sons"], ["stock_count", 13], ["img_url", "https://placehold.it/300x300.jpg/000"], ["created_at", "2016-05-29 23:11:22.862743"], ["updated_at", "2016-05-29 23:11:22.862743"]]
+  [1m[36m (0.4ms)[0m  [1mCOMMIT[0m
+  [1m[35m (0.1ms)[0m  BEGIN
+  [1m[36mSQL (0.2ms)[0m  [1mINSERT INTO "category_products" ("product_id", "category_id", "created_at", "updated_at") VALUES ($1, $2, $3, $4) RETURNING "id"[0m  [["product_id", 20], ["category_id", 5], ["created_at", "2016-05-29 23:11:22.866029"], ["updated_at", "2016-05-29 23:11:22.866029"]]
+  [1m[35m (0.4ms)[0m  COMMIT
+  [1m[36m (0.1ms)[0m  [1mBEGIN[0m
+  [1m[35mSQL (0.2ms)[0m  INSERT INTO "category_products" ("product_id", "category_id", "created_at", "updated_at") VALUES ($1, $2, $3, $4) RETURNING "id"  [["product_id", 20], ["category_id", 1], ["created_at", "2016-05-29 23:11:22.869100"], ["updated_at", "2016-05-29 23:11:22.869100"]]
+  [1m[36m (0.4ms)[0m  [1mCOMMIT[0m
+  [1m[35mCategory Load (0.2ms)[0m  SELECT  "categories".* FROM "categories" WHERE "categories"."name" = $1 LIMIT 1  [["name", "Sports"]]
+  [1m[36m (0.1ms)[0m  [1mBEGIN[0m
+  [1m[35mSQL (0.2ms)[0m  INSERT INTO "products" ("name", "price", "description", "brand", "stock_count", "img_url", "created_at", "updated_at") VALUES ($1, $2, $3, $4, $5, $6, $7, $8) RETURNING "id"  [["name", "Ohio zombies T-Shirt"], ["price", "17.56"], ["description", "Compatible needs-based internet solution"], ["brand", "McGlynn-Schmidt"], ["stock_count", 5], ["img_url", "https://placehold.it/300x300.jpg/000"], ["created_at", "2016-05-29 23:11:22.872166"], ["updated_at", "2016-05-29 23:11:22.872166"]]
+  [1m[36m (0.4ms)[0m  [1mCOMMIT[0m
+  [1m[35m (0.1ms)[0m  BEGIN
+  [1m[36mSQL (0.3ms)[0m  [1mINSERT INTO "category_products" ("product_id", "category_id", "created_at", "updated_at") VALUES ($1, $2, $3, $4) RETURNING "id"[0m  [["product_id", 21], ["category_id", 2], ["created_at", "2016-05-29 23:11:22.875478"], ["updated_at", "2016-05-29 23:11:22.875478"]]
+  [1m[35m (0.5ms)[0m  COMMIT
+  [1m[36mCategory Load (0.2ms)[0m  [1mSELECT  "categories".* FROM "categories" WHERE "categories"."name" = $1 LIMIT 1[0m  [["name", "Sports"]]
+  [1m[35m (0.1ms)[0m  BEGIN
+  [1m[36mSQL (0.2ms)[0m  [1mINSERT INTO "products" ("name", "price", "description", "brand", "stock_count", "img_url", "created_at", "updated_at") VALUES ($1, $2, $3, $4, $5, $6, $7, $8) RETURNING "id"[0m  [["name", "Michigan fishes T-Shirt"], ["price", "22.89"], ["description", "Business-focused hybrid time-frame"], ["brand", "Anderson and Sons"], ["stock_count", 15], ["img_url", "https://placehold.it/300x300.jpg/000"], ["created_at", "2016-05-29 23:11:22.879313"], ["updated_at", "2016-05-29 23:11:22.879313"]]
+  [1m[35m (0.4ms)[0m  COMMIT
+  [1m[36m (0.1ms)[0m  [1mBEGIN[0m
+  [1m[35mSQL (0.2ms)[0m  INSERT INTO "category_products" ("product_id", "category_id", "created_at", "updated_at") VALUES ($1, $2, $3, $4) RETURNING "id"  [["product_id", 22], ["category_id", 2], ["created_at", "2016-05-29 23:11:22.882829"], ["updated_at", "2016-05-29 23:11:22.882829"]]
+  [1m[36m (0.5ms)[0m  [1mCOMMIT[0m
+  [1m[35mCategory Load (0.1ms)[0m  SELECT  "categories".* FROM "categories" WHERE "categories"."name" = $1 LIMIT 1  [["name", "Sports"]]
+  [1m[36m (0.1ms)[0m  [1mBEGIN[0m
+  [1m[35mSQL (0.2ms)[0m  INSERT INTO "products" ("name", "price", "description", "brand", "stock_count", "img_url", "created_at", "updated_at") VALUES ($1, $2, $3, $4, $5, $6, $7, $8) RETURNING "id"  [["name", "Hawaii oxen T-Shirt"], ["price", "22.89"], ["description", "Secured fresh-thinking flexibility"], ["brand", "Sauer-Will"], ["stock_count", 8], ["img_url", "https://placehold.it/300x300.jpg/000"], ["created_at", "2016-05-29 23:11:22.886043"], ["updated_at", "2016-05-29 23:11:22.886043"]]
+  [1m[36m (0.9ms)[0m  [1mCOMMIT[0m
+  [1m[35m (0.2ms)[0m  BEGIN
+  [1m[36mSQL (0.2ms)[0m  [1mINSERT INTO "category_products" ("product_id", "category_id", "created_at", "updated_at") VALUES ($1, $2, $3, $4) RETURNING "id"[0m  [["product_id", 23], ["category_id", 2], ["created_at", "2016-05-29 23:11:22.890154"], ["updated_at", "2016-05-29 23:11:22.890154"]]
+  [1m[35m (0.5ms)[0m  COMMIT
+  [1m[36mCategory Load (0.2ms)[0m  [1mSELECT  "categories".* FROM "categories" WHERE "categories"."name" = $1 LIMIT 1[0m  [["name", "Sports"]]
+  [1m[35m (0.1ms)[0m  BEGIN
+  [1m[36mSQL (0.2ms)[0m  [1mINSERT INTO "products" ("name", "price", "description", "brand", "stock_count", "img_url", "created_at", "updated_at") VALUES ($1, $2, $3, $4, $5, $6, $7, $8) RETURNING "id"[0m  [["name", "Arkansas lions T-Shirt"], ["price", "22.89"], ["description", "Integrated empowering monitoring"], ["brand", "Vandervort Group"], ["stock_count", 17], ["img_url", "https://placehold.it/300x300.jpg/000"], ["created_at", "2016-05-29 23:11:22.893328"], ["updated_at", "2016-05-29 23:11:22.893328"]]
+  [1m[35m (0.4ms)[0m  COMMIT
+  [1m[36m (0.1ms)[0m  [1mBEGIN[0m
+  [1m[35mSQL (0.2ms)[0m  INSERT INTO "category_products" ("product_id", "category_id", "created_at", "updated_at") VALUES ($1, $2, $3, $4) RETURNING "id"  [["product_id", 24], ["category_id", 2], ["created_at", "2016-05-29 23:11:22.896680"], ["updated_at", "2016-05-29 23:11:22.896680"]]
+  [1m[36m (0.4ms)[0m  [1mCOMMIT[0m
+  [1m[35mCategory Load (0.1ms)[0m  SELECT  "categories".* FROM "categories" WHERE "categories"."name" = $1 LIMIT 1  [["name", "Sports"]]
+  [1m[36m (0.1ms)[0m  [1mBEGIN[0m
+  [1m[35mSQL (0.2ms)[0m  INSERT INTO "products" ("name", "price", "description", "brand", "stock_count", "img_url", "created_at", "updated_at") VALUES ($1, $2, $3, $4, $5, $6, $7, $8) RETURNING "id"  [["name", "New Hampshire whales T-Shirt"], ["price", "17.56"], ["description", "Cross-platform solution-oriented structure"], ["brand", "Dach-Rath"], ["stock_count", 8], ["img_url", "https://placehold.it/300x300.jpg/000"], ["created_at", "2016-05-29 23:11:22.899561"], ["updated_at", "2016-05-29 23:11:22.899561"]]
+  [1m[36m (0.4ms)[0m  [1mCOMMIT[0m
+  [1m[35m (0.1ms)[0m  BEGIN
+  [1m[36mSQL (0.2ms)[0m  [1mINSERT INTO "category_products" ("product_id", "category_id", "created_at", "updated_at") VALUES ($1, $2, $3, $4) RETURNING "id"[0m  [["product_id", 25], ["category_id", 2], ["created_at", "2016-05-29 23:11:22.902831"], ["updated_at", "2016-05-29 23:11:22.902831"]]
+  [1m[35m (0.4ms)[0m  COMMIT
+  [1m[36mCategory Load (0.1ms)[0m  [1mSELECT  "categories".* FROM "categories" WHERE "categories"."name" = $1 LIMIT 1[0m  [["name", "Sports"]]
+  [1m[35m (0.1ms)[0m  BEGIN
+  [1m[36mSQL (0.2ms)[0m  [1mINSERT INTO "products" ("name", "price", "description", "brand", "stock_count", "img_url", "created_at", "updated_at") VALUES ($1, $2, $3, $4, $5, $6, $7, $8) RETURNING "id"[0m  [["name", "New Jersey spirits T-Shirt"], ["price", "22.89"], ["description", "Polarised fresh-thinking budgetary management"], ["brand", "Wyman, Kub and Kihn"], ["stock_count", 15], ["img_url", "https://placehold.it/300x300.jpg/000"], ["created_at", "2016-05-29 23:11:22.905874"], ["updated_at", "2016-05-29 23:11:22.905874"]]
+  [1m[35m (0.4ms)[0m  COMMIT
+  [1m[36m (0.1ms)[0m  [1mBEGIN[0m
+  [1m[35mSQL (0.2ms)[0m  INSERT INTO "category_products" ("product_id", "category_id", "created_at", "updated_at") VALUES ($1, $2, $3, $4) RETURNING "id"  [["product_id", 26], ["category_id", 2], ["created_at", "2016-05-29 23:11:22.909283"], ["updated_at", "2016-05-29 23:11:22.909283"]]
+  [1m[36m (0.4ms)[0m  [1mCOMMIT[0m
+  [1m[35mCategory Load (0.2ms)[0m  SELECT  "categories".* FROM "categories" WHERE "categories"."name" = $1 LIMIT 1  [["name", "Sports"]]
+  [1m[36m (0.1ms)[0m  [1mBEGIN[0m
+  [1m[35mSQL (0.2ms)[0m  INSERT INTO "products" ("name", "price", "description", "brand", "stock_count", "img_url", "created_at", "updated_at") VALUES ($1, $2, $3, $4, $5, $6, $7, $8) RETURNING "id"  [["name", "Missouri gooses T-Shirt"], ["price", "8.99"], ["description", "Reactive dynamic firmware"], ["brand", "Hansen Group"], ["stock_count", 8], ["img_url", "https://placehold.it/300x300.jpg/000"], ["created_at", "2016-05-29 23:11:22.913013"], ["updated_at", "2016-05-29 23:11:22.913013"]]
+  [1m[36m (0.4ms)[0m  [1mCOMMIT[0m
+  [1m[35m (0.1ms)[0m  BEGIN
+  [1m[36mSQL (0.3ms)[0m  [1mINSERT INTO "category_products" ("product_id", "category_id", "created_at", "updated_at") VALUES ($1, $2, $3, $4) RETURNING "id"[0m  [["product_id", 27], ["category_id", 2], ["created_at", "2016-05-29 23:11:22.916583"], ["updated_at", "2016-05-29 23:11:22.916583"]]
+  [1m[35m (0.4ms)[0m  COMMIT
+  [1m[36mCategory Load (0.1ms)[0m  [1mSELECT  "categories".* FROM "categories" WHERE "categories"."name" = $1 LIMIT 1[0m  [["name", "Sports"]]
+  [1m[35m (0.1ms)[0m  BEGIN
+  [1m[36mSQL (0.2ms)[0m  [1mINSERT INTO "products" ("name", "price", "description", "brand", "stock_count", "img_url", "created_at", "updated_at") VALUES ($1, $2, $3, $4, $5, $6, $7, $8) RETURNING "id"[0m  [["name", "Montana wolves T-Shirt"], ["price", "8.99"], ["description", "De-engineered 6th generation paradigm"], ["brand", "Hand LLC"], ["stock_count", 13], ["img_url", "https://placehold.it/300x300.jpg/000"], ["created_at", "2016-05-29 23:11:22.919712"], ["updated_at", "2016-05-29 23:11:22.919712"]]
+  [1m[35m (0.5ms)[0m  COMMIT
+  [1m[36m (0.1ms)[0m  [1mBEGIN[0m
+  [1m[35mSQL (0.2ms)[0m  INSERT INTO "category_products" ("product_id", "category_id", "created_at", "updated_at") VALUES ($1, $2, $3, $4) RETURNING "id"  [["product_id", 28], ["category_id", 2], ["created_at", "2016-05-29 23:11:22.923141"], ["updated_at", "2016-05-29 23:11:22.923141"]]
+  [1m[36m (0.4ms)[0m  [1mCOMMIT[0m
+  [1m[35mCategory Load (0.2ms)[0m  SELECT  "categories".* FROM "categories" WHERE "categories"."name" = $1 LIMIT 1  [["name", "Sports"]]
+  [1m[36m (0.1ms)[0m  [1mBEGIN[0m
+  [1m[35mSQL (0.2ms)[0m  INSERT INTO "products" ("name", "price", "description", "brand", "stock_count", "img_url", "created_at", "updated_at") VALUES ($1, $2, $3, $4, $5, $6, $7, $8) RETURNING "id"  [["name", "Oregon exorcists T-Shirt"], ["price", "8.99"], ["description", "Synergized mobile open architecture"], ["brand", "Boyle Group"], ["stock_count", 12], ["img_url", "https://placehold.it/300x300.jpg/000"], ["created_at", "2016-05-29 23:11:22.926242"], ["updated_at", "2016-05-29 23:11:22.926242"]]
+  [1m[36m (0.4ms)[0m  [1mCOMMIT[0m
+  [1m[35m (0.1ms)[0m  BEGIN
+  [1m[36mSQL (0.2ms)[0m  [1mINSERT INTO "category_products" ("product_id", "category_id", "created_at", "updated_at") VALUES ($1, $2, $3, $4) RETURNING "id"[0m  [["product_id", 29], ["category_id", 2], ["created_at", "2016-05-29 23:11:22.929631"], ["updated_at", "2016-05-29 23:11:22.929631"]]
+  [1m[35m (0.4ms)[0m  COMMIT
+  [1m[36mCategory Load (0.2ms)[0m  [1mSELECT  "categories".* FROM "categories" WHERE "categories"."name" = $1 LIMIT 1[0m  [["name", "Sports"]]
+  [1m[35m (0.1ms)[0m  BEGIN
+  [1m[36mSQL (0.2ms)[0m  [1mINSERT INTO "products" ("name", "price", "description", "brand", "stock_count", "img_url", "created_at", "updated_at") VALUES ($1, $2, $3, $4, $5, $6, $7, $8) RETURNING "id"[0m  [["name", "Arkansas frogs T-Shirt"], ["price", "24.45"], ["description", "Right-sized human-resource throughput"], ["brand", "Weimann, Schaefer and Waelchi"], ["stock_count", 7], ["img_url", "https://placehold.it/300x300.jpg/000"], ["created_at", "2016-05-29 23:11:22.932541"], ["updated_at", "2016-05-29 23:11:22.932541"]]
+  [1m[35m (0.4ms)[0m  COMMIT
+  [1m[36m (0.1ms)[0m  [1mBEGIN[0m
+  [1m[35mSQL (0.2ms)[0m  INSERT INTO "category_products" ("product_id", "category_id", "created_at", "updated_at") VALUES ($1, $2, $3, $4) RETURNING "id"  [["product_id", 30], ["category_id", 2], ["created_at", "2016-05-29 23:11:22.935884"], ["updated_at", "2016-05-29 23:11:22.935884"]]
+  [1m[36m (0.4ms)[0m  [1mCOMMIT[0m
+  [1m[35mCategory Load (0.1ms)[0m  SELECT  "categories".* FROM "categories" WHERE "categories"."name" = $1 LIMIT 1  [["name", "Sports"]]
+  [1m[36m (0.1ms)[0m  [1mBEGIN[0m
+  [1m[35mSQL (0.2ms)[0m  INSERT INTO "products" ("name", "price", "description", "brand", "stock_count", "img_url", "created_at", "updated_at") VALUES ($1, $2, $3, $4, $5, $6, $7, $8) RETURNING "id"  [["name", "Maryland bears T-Shirt"], ["price", "17.56"], ["description", "Cloned optimal infrastructure"], ["brand", "Williamson, Koss and Emmerich"], ["stock_count", 10], ["img_url", "https://placehold.it/300x300.jpg/000"], ["created_at", "2016-05-29 23:11:22.938934"], ["updated_at", "2016-05-29 23:11:22.938934"]]
+  [1m[36m (0.5ms)[0m  [1mCOMMIT[0m
+  [1m[35m (0.1ms)[0m  BEGIN
+  [1m[36mSQL (0.2ms)[0m  [1mINSERT INTO "category_products" ("product_id", "category_id", "created_at", "updated_at") VALUES ($1, $2, $3, $4) RETURNING "id"[0m  [["product_id", 31], ["category_id", 2], ["created_at", "2016-05-29 23:11:22.949658"], ["updated_at", "2016-05-29 23:11:22.949658"]]
+  [1m[35m (0.4ms)[0m  COMMIT
+  [1m[36mCategory Load (0.1ms)[0m  [1mSELECT  "categories".* FROM "categories" WHERE "categories"."name" = $1 LIMIT 1[0m  [["name", "Sports"]]
+  [1m[35m (0.1ms)[0m  BEGIN
+  [1m[36mSQL (0.2ms)[0m  [1mINSERT INTO "products" ("name", "price", "description", "brand", "stock_count", "img_url", "created_at", "updated_at") VALUES ($1, $2, $3, $4, $5, $6, $7, $8) RETURNING "id"[0m  [["name", "California zombies T-Shirt"], ["price", "8.99"], ["description", "Universal leading edge algorithm"], ["brand", "Abbott Group"], ["stock_count", 15], ["img_url", "https://placehold.it/300x300.jpg/000"], ["created_at", "2016-05-29 23:11:22.953014"], ["updated_at", "2016-05-29 23:11:22.953014"]]
+  [1m[35m (0.4ms)[0m  COMMIT
+  [1m[36m (0.1ms)[0m  [1mBEGIN[0m
+  [1m[35mSQL (0.2ms)[0m  INSERT INTO "category_products" ("product_id", "category_id", "created_at", "updated_at") VALUES ($1, $2, $3, $4) RETURNING "id"  [["product_id", 32], ["category_id", 2], ["created_at", "2016-05-29 23:11:22.956723"], ["updated_at", "2016-05-29 23:11:22.956723"]]
+  [1m[36m (0.3ms)[0m  [1mCOMMIT[0m
+  [1m[35mCategory Load (0.2ms)[0m  SELECT  "categories".* FROM "categories" WHERE "categories"."name" = $1 LIMIT 1  [["name", "Sports"]]
+  [1m[36m (0.1ms)[0m  [1mBEGIN[0m
+  [1m[35mSQL (0.2ms)[0m  INSERT INTO "products" ("name", "price", "description", "brand", "stock_count", "img_url", "created_at", "updated_at") VALUES ($1, $2, $3, $4, $5, $6, $7, $8) RETURNING "id"  [["name", "Maine zombies T-Shirt"], ["price", "8.99"], ["description", "Streamlined grid-enabled definition"], ["brand", "Hartmann, Ondricka and Volkman"], ["stock_count", 12], ["img_url", "https://placehold.it/300x300.jpg/000"], ["created_at", "2016-05-29 23:11:22.960278"], ["updated_at", "2016-05-29 23:11:22.960278"]]
+  [1m[36m (0.4ms)[0m  [1mCOMMIT[0m
+  [1m[35m (0.1ms)[0m  BEGIN
+  [1m[36mSQL (0.2ms)[0m  [1mINSERT INTO "category_products" ("product_id", "category_id", "created_at", "updated_at") VALUES ($1, $2, $3, $4) RETURNING "id"[0m  [["product_id", 33], ["category_id", 2], ["created_at", "2016-05-29 23:11:22.964265"], ["updated_at", "2016-05-29 23:11:22.964265"]]
+  [1m[35m (0.4ms)[0m  COMMIT
+  [1m[36mCategory Load (0.1ms)[0m  [1mSELECT  "categories".* FROM "categories" WHERE "categories"."name" = $1 LIMIT 1[0m  [["name", "Sports"]]
+  [1m[35m (0.1ms)[0m  BEGIN
+  [1m[36mSQL (0.2ms)[0m  [1mINSERT INTO "products" ("name", "price", "description", "brand", "stock_count", "img_url", "created_at", "updated_at") VALUES ($1, $2, $3, $4, $5, $6, $7, $8) RETURNING "id"[0m  [["name", "New York sorcerors T-Shirt"], ["price", "24.45"], ["description", "Fully-configurable multimedia secured line"], ["brand", "Nienow-Stokes"], ["stock_count", 6], ["img_url", "https://placehold.it/300x300.jpg/000"], ["created_at", "2016-05-29 23:11:22.967417"], ["updated_at", "2016-05-29 23:11:22.967417"]]
+  [1m[35m (0.4ms)[0m  COMMIT
+  [1m[36m (0.1ms)[0m  [1mBEGIN[0m
+  [1m[35mSQL (0.2ms)[0m  INSERT INTO "category_products" ("product_id", "category_id", "created_at", "updated_at") VALUES ($1, $2, $3, $4) RETURNING "id"  [["product_id", 34], ["category_id", 2], ["created_at", "2016-05-29 23:11:22.971067"], ["updated_at", "2016-05-29 23:11:22.971067"]]
+  [1m[36m (0.4ms)[0m  [1mCOMMIT[0m
+  [1m[35mCategory Load (0.1ms)[0m  SELECT  "categories".* FROM "categories" WHERE "categories"."name" = $1 LIMIT 1  [["name", "Sports"]]
+  [1m[36m (0.1ms)[0m  [1mBEGIN[0m
+  [1m[35mSQL (0.2ms)[0m  INSERT INTO "products" ("name", "price", "description", "brand", "stock_count", "img_url", "created_at", "updated_at") VALUES ($1, $2, $3, $4, $5, $6, $7, $8) RETURNING "id"  [["name", "Kansas penguins T-Shirt"], ["price", "8.99"], ["description", "Adaptive even-keeled task-force"], ["brand", "Cole-Sanford"], ["stock_count", 12], ["img_url", "https://placehold.it/300x300.jpg/000"], ["created_at", "2016-05-29 23:11:22.974337"], ["updated_at", "2016-05-29 23:11:22.974337"]]
+  [1m[36m (0.4ms)[0m  [1mCOMMIT[0m
+  [1m[35m (0.1ms)[0m  BEGIN
+  [1m[36mSQL (0.2ms)[0m  [1mINSERT INTO "category_products" ("product_id", "category_id", "created_at", "updated_at") VALUES ($1, $2, $3, $4) RETURNING "id"[0m  [["product_id", 35], ["category_id", 2], ["created_at", "2016-05-29 23:11:22.977991"], ["updated_at", "2016-05-29 23:11:22.977991"]]
+  [1m[35m (0.4ms)[0m  COMMIT
+  [1m[36mCategory Load (0.2ms)[0m  [1mSELECT  "categories".* FROM "categories" WHERE "categories"."name" = $1 LIMIT 1[0m  [["name", "Sports"]]
+  [1m[35m (0.1ms)[0m  BEGIN
+  [1m[36mSQL (0.2ms)[0m  [1mINSERT INTO "products" ("name", "price", "description", "brand", "stock_count", "img_url", "created_at", "updated_at") VALUES ($1, $2, $3, $4, $5, $6, $7, $8) RETURNING "id"[0m  [["name", "Maryland ghosts T-Shirt"], ["price", "17.56"], ["description", "Configurable bi-directional support"], ["brand", "Yost, Connelly and Greenholt"], ["stock_count", 20], ["img_url", "https://placehold.it/300x300.jpg/000"], ["created_at", "2016-05-29 23:11:22.981819"], ["updated_at", "2016-05-29 23:11:22.981819"]]
+  [1m[35m (0.3ms)[0m  COMMIT
+  [1m[36m (0.1ms)[0m  [1mBEGIN[0m
+  [1m[35mSQL (0.2ms)[0m  INSERT INTO "category_products" ("product_id", "category_id", "created_at", "updated_at") VALUES ($1, $2, $3, $4) RETURNING "id"  [["product_id", 36], ["category_id", 2], ["created_at", "2016-05-29 23:11:22.985606"], ["updated_at", "2016-05-29 23:11:22.985606"]]
+  [1m[36m (0.4ms)[0m  [1mCOMMIT[0m
+  [1m[35mCategory Load (0.1ms)[0m  SELECT  "categories".* FROM "categories" WHERE "categories"."name" = $1 LIMIT 1  [["name", "Sports"]]
+  [1m[36m (0.1ms)[0m  [1mBEGIN[0m
+  [1m[35mSQL (0.2ms)[0m  INSERT INTO "products" ("name", "price", "description", "brand", "stock_count", "img_url", "created_at", "updated_at") VALUES ($1, $2, $3, $4, $5, $6, $7, $8) RETURNING "id"  [["name", "Vermont bears T-Shirt"], ["price", "24.45"], ["description", "Synergistic even-keeled database"], ["brand", "Gleichner and Sons"], ["stock_count", 16], ["img_url", "https://placehold.it/300x300.jpg/000"], ["created_at", "2016-05-29 23:11:22.988963"], ["updated_at", "2016-05-29 23:11:22.988963"]]
+  [1m[36m (0.4ms)[0m  [1mCOMMIT[0m
+  [1m[35m (0.1ms)[0m  BEGIN
+  [1m[36mSQL (0.3ms)[0m  [1mINSERT INTO "category_products" ("product_id", "category_id", "created_at", "updated_at") VALUES ($1, $2, $3, $4) RETURNING "id"[0m  [["product_id", 37], ["category_id", 2], ["created_at", "2016-05-29 23:11:22.992783"], ["updated_at", "2016-05-29 23:11:22.992783"]]
+  [1m[35m (0.4ms)[0m  COMMIT
+  [1m[36mCategory Load (0.2ms)[0m  [1mSELECT  "categories".* FROM "categories" WHERE "categories"."name" = $1 LIMIT 1[0m  [["name", "Sports"]]
+  [1m[35m (0.1ms)[0m  BEGIN
+  [1m[36mSQL (0.2ms)[0m  [1mINSERT INTO "products" ("name", "price", "description", "brand", "stock_count", "img_url", "created_at", "updated_at") VALUES ($1, $2, $3, $4, $5, $6, $7, $8) RETURNING "id"[0m  [["name", "North Carolina gnomes T-Shirt"], ["price", "22.89"], ["description", "Optional 3rd generation encryption"], ["brand", "Walsh LLC"], ["stock_count", 20], ["img_url", "https://placehold.it/300x300.jpg/000"], ["created_at", "2016-05-29 23:11:22.997142"], ["updated_at", "2016-05-29 23:11:22.997142"]]
+  [1m[35m (0.8ms)[0m  COMMIT
+  [1m[36m (0.1ms)[0m  [1mBEGIN[0m
+  [1m[35mSQL (0.2ms)[0m  INSERT INTO "category_products" ("product_id", "category_id", "created_at", "updated_at") VALUES ($1, $2, $3, $4) RETURNING "id"  [["product_id", 38], ["category_id", 2], ["created_at", "2016-05-29 23:11:23.001546"], ["updated_at", "2016-05-29 23:11:23.001546"]]
+  [1m[36m (0.4ms)[0m  [1mCOMMIT[0m
+  [1m[35mCategory Load (0.3ms)[0m  SELECT  "categories".* FROM "categories" WHERE "categories"."name" = $1 LIMIT 1  [["name", "Sports"]]
+  [1m[36m (0.1ms)[0m  [1mBEGIN[0m
+  [1m[35mSQL (0.2ms)[0m  INSERT INTO "products" ("name", "price", "description", "brand", "stock_count", "img_url", "created_at", "updated_at") VALUES ($1, $2, $3, $4, $5, $6, $7, $8) RETURNING "id"  [["name", "Minnesota elves T-Shirt"], ["price", "24.45"], ["description", "Fundamental 4th generation solution"], ["brand", "Casper-Pagac"], ["stock_count", 20], ["img_url", "https://placehold.it/300x300.jpg/000"], ["created_at", "2016-05-29 23:11:23.005000"], ["updated_at", "2016-05-29 23:11:23.005000"]]
+  [1m[36m (0.4ms)[0m  [1mCOMMIT[0m
+  [1m[35m (0.1ms)[0m  BEGIN
+  [1m[36mSQL (0.2ms)[0m  [1mINSERT INTO "category_products" ("product_id", "category_id", "created_at", "updated_at") VALUES ($1, $2, $3, $4) RETURNING "id"[0m  [["product_id", 39], ["category_id", 2], ["created_at", "2016-05-29 23:11:23.008512"], ["updated_at", "2016-05-29 23:11:23.008512"]]
+  [1m[35m (0.6ms)[0m  COMMIT
+  [1m[36mCategory Load (0.4ms)[0m  [1mSELECT  "categories".* FROM "categories" WHERE "categories"."name" = $1 LIMIT 1[0m  [["name", "Sports"]]
+  [1m[35m (0.1ms)[0m  BEGIN
+  [1m[36mSQL (0.4ms)[0m  [1mINSERT INTO "products" ("name", "price", "description", "brand", "stock_count", "img_url", "created_at", "updated_at") VALUES ($1, $2, $3, $4, $5, $6, $7, $8) RETURNING "id"[0m  [["name", "Wyoming prophets T-Shirt"], ["price", "17.56"], ["description", "Polarised incremental architecture"], ["brand", "Kohler LLC"], ["stock_count", 20], ["img_url", "https://placehold.it/300x300.jpg/000"], ["created_at", "2016-05-29 23:11:23.012456"], ["updated_at", "2016-05-29 23:11:23.012456"]]
+  [1m[35m (0.4ms)[0m  COMMIT
+  [1m[36m (0.1ms)[0m  [1mBEGIN[0m
+  [1m[35mSQL (0.2ms)[0m  INSERT INTO "category_products" ("product_id", "category_id", "created_at", "updated_at") VALUES ($1, $2, $3, $4) RETURNING "id"  [["product_id", 40], ["category_id", 2], ["created_at", "2016-05-29 23:11:23.016079"], ["updated_at", "2016-05-29 23:11:23.016079"]]
+  [1m[36m (0.4ms)[0m  [1mCOMMIT[0m
+  [1m[35mCategory Load (0.1ms)[0m  SELECT  "categories".* FROM "categories" WHERE "categories"."name" = $1 LIMIT 1  [["name", "Superhero"]]
+  [1m[36mCategory Load (0.1ms)[0m  [1mSELECT  "categories".* FROM "categories" WHERE "categories"."name" = $1 LIMIT 1[0m  [["name", "Sci-Fi"]]
+  [1m[35mCategory Load (0.1ms)[0m  SELECT  "categories".* FROM "categories" WHERE "categories"."name" = $1 LIMIT 1  [["name", "Kids"]]
+  [1m[36m (0.1ms)[0m  [1mBEGIN[0m
+  [1m[35mSQL (0.2ms)[0m  INSERT INTO "products" ("name", "price", "description", "brand", "stock_count", "img_url", "created_at", "updated_at") VALUES ($1, $2, $3, $4, $5, $6, $7, $8) RETURNING "id"  [["name", "Tiger Shark of Hearts T-Shirt"], ["price", "15.99"], ["description", "Cross-platform optimizing approach"], ["brand", "Schaden, King and Beier"], ["stock_count", 11], ["img_url", "https://placehold.it/300x300.jpg/000"], ["created_at", "2016-05-29 23:11:23.019975"], ["updated_at", "2016-05-29 23:11:23.019975"]]
+  [1m[36m (0.4ms)[0m  [1mCOMMIT[0m
+  [1m[35m (0.1ms)[0m  BEGIN
+  [1m[36mSQL (0.2ms)[0m  [1mINSERT INTO "category_products" ("product_id", "category_id", "created_at", "updated_at") VALUES ($1, $2, $3, $4) RETURNING "id"[0m  [["product_id", 41], ["category_id", 3], ["created_at", "2016-05-29 23:11:23.023366"], ["updated_at", "2016-05-29 23:11:23.023366"]]
+  [1m[35m (0.3ms)[0m  COMMIT
+  [1m[36m (0.1ms)[0m  [1mBEGIN[0m
+  [1m[35mSQL (0.2ms)[0m  INSERT INTO "category_products" ("product_id", "category_id", "created_at", "updated_at") VALUES ($1, $2, $3, $4) RETURNING "id"  [["product_id", 41], ["category_id", 1], ["created_at", "2016-05-29 23:11:23.026298"], ["updated_at", "2016-05-29 23:11:23.026298"]]
+  [1m[36m (0.4ms)[0m  [1mCOMMIT[0m
+  [1m[35m (0.1ms)[0m  BEGIN
+  [1m[36mSQL (0.2ms)[0m  [1mINSERT INTO "category_products" ("product_id", "category_id", "created_at", "updated_at") VALUES ($1, $2, $3, $4) RETURNING "id"[0m  [["product_id", 41], ["category_id", 5], ["created_at", "2016-05-29 23:11:23.029905"], ["updated_at", "2016-05-29 23:11:23.029905"]]
+  [1m[35m (0.4ms)[0m  COMMIT
+  [1m[36mCategory Load (0.2ms)[0m  [1mSELECT  "categories".* FROM "categories" WHERE "categories"."name" = $1 LIMIT 1[0m  [["name", "Superhero"]]
+  [1m[35mCategory Load (0.1ms)[0m  SELECT  "categories".* FROM "categories" WHERE "categories"."name" = $1 LIMIT 1  [["name", "Sci-Fi"]]
+  [1m[36mCategory Load (0.1ms)[0m  [1mSELECT  "categories".* FROM "categories" WHERE "categories"."name" = $1 LIMIT 1[0m  [["name", "Kids"]]
+  [1m[35m (0.1ms)[0m  BEGIN
+  [1m[36mSQL (0.2ms)[0m  [1mINSERT INTO "products" ("name", "price", "description", "brand", "stock_count", "img_url", "created_at", "updated_at") VALUES ($1, $2, $3, $4, $5, $6, $7, $8) RETURNING "id"[0m  [["name", "Toxin T-Shirt"], ["price", "16.56"], ["description", "Face to face high-level firmware"], ["brand", "Bogan-Lang"], ["stock_count", 18], ["img_url", "https://placehold.it/300x300.jpg/000"], ["created_at", "2016-05-29 23:11:23.033972"], ["updated_at", "2016-05-29 23:11:23.033972"]]
+  [1m[35m (0.4ms)[0m  COMMIT
+  [1m[36m (0.1ms)[0m  [1mBEGIN[0m
+  [1m[35mSQL (0.2ms)[0m  INSERT INTO "category_products" ("product_id", "category_id", "created_at", "updated_at") VALUES ($1, $2, $3, $4) RETURNING "id"  [["product_id", 42], ["category_id", 3], ["created_at", "2016-05-29 23:11:23.037377"], ["updated_at", "2016-05-29 23:11:23.037377"]]
+  [1m[36m (0.4ms)[0m  [1mCOMMIT[0m
+  [1m[35m (0.1ms)[0m  BEGIN
+  [1m[36mSQL (0.2ms)[0m  [1mINSERT INTO "category_products" ("product_id", "category_id", "created_at", "updated_at") VALUES ($1, $2, $3, $4) RETURNING "id"[0m  [["product_id", 42], ["category_id", 1], ["created_at", "2016-05-29 23:11:23.039944"], ["updated_at", "2016-05-29 23:11:23.039944"]]
+  [1m[35m (0.4ms)[0m  COMMIT
+  [1m[36m (0.1ms)[0m  [1mBEGIN[0m
+  [1m[35mSQL (0.3ms)[0m  INSERT INTO "category_products" ("product_id", "category_id", "created_at", "updated_at") VALUES ($1, $2, $3, $4) RETURNING "id"  [["product_id", 42], ["category_id", 5], ["created_at", "2016-05-29 23:11:23.042500"], ["updated_at", "2016-05-29 23:11:23.042500"]]
+  [1m[36m (0.5ms)[0m  [1mCOMMIT[0m
+  [1m[35mCategory Load (0.2ms)[0m  SELECT  "categories".* FROM "categories" WHERE "categories"."name" = $1 LIMIT 1  [["name", "Superhero"]]
+  [1m[36mCategory Load (0.1ms)[0m  [1mSELECT  "categories".* FROM "categories" WHERE "categories"."name" = $1 LIMIT 1[0m  [["name", "Sci-Fi"]]
+  [1m[35mCategory Load (0.1ms)[0m  SELECT  "categories".* FROM "categories" WHERE "categories"."name" = $1 LIMIT 1  [["name", "Kids"]]
+  [1m[36m (0.1ms)[0m  [1mBEGIN[0m
+  [1m[35mSQL (0.2ms)[0m  INSERT INTO "products" ("name", "price", "description", "brand", "stock_count", "img_url", "created_at", "updated_at") VALUES ($1, $2, $3, $4, $5, $6, $7, $8) RETURNING "id"  [["name", "Crystal Woman T-Shirt"], ["price", "24.89"], ["description", "Profound systemic initiative"], ["brand", "Shields-Berge"], ["stock_count", 17], ["img_url", "https://placehold.it/300x300.jpg/000"], ["created_at", "2016-05-29 23:11:23.046640"], ["updated_at", "2016-05-29 23:11:23.046640"]]
+  [1m[36m (0.4ms)[0m  [1mCOMMIT[0m
+  [1m[35m (0.1ms)[0m  BEGIN
+  [1m[36mSQL (0.2ms)[0m  [1mINSERT INTO "category_products" ("product_id", "category_id", "created_at", "updated_at") VALUES ($1, $2, $3, $4) RETURNING "id"[0m  [["product_id", 43], ["category_id", 3], ["created_at", "2016-05-29 23:11:23.050151"], ["updated_at", "2016-05-29 23:11:23.050151"]]
+  [1m[35m (0.4ms)[0m  COMMIT
+  [1m[36m (0.1ms)[0m  [1mBEGIN[0m
+  [1m[35mSQL (0.2ms)[0m  INSERT INTO "category_products" ("product_id", "category_id", "created_at", "updated_at") VALUES ($1, $2, $3, $4) RETURNING "id"  [["product_id", 43], ["category_id", 1], ["created_at", "2016-05-29 23:11:23.052951"], ["updated_at", "2016-05-29 23:11:23.052951"]]
+  [1m[36m (0.4ms)[0m  [1mCOMMIT[0m
+  [1m[35m (0.1ms)[0m  BEGIN
+  [1m[36mSQL (0.2ms)[0m  [1mINSERT INTO "category_products" ("product_id", "category_id", "created_at", "updated_at") VALUES ($1, $2, $3, $4) RETURNING "id"[0m  [["product_id", 43], ["category_id", 5], ["created_at", "2016-05-29 23:11:23.055701"], ["updated_at", "2016-05-29 23:11:23.055701"]]
+  [1m[35m (0.4ms)[0m  COMMIT
+  [1m[36mCategory Load (0.2ms)[0m  [1mSELECT  "categories".* FROM "categories" WHERE "categories"."name" = $1 LIMIT 1[0m  [["name", "Superhero"]]
+  [1m[35mCategory Load (0.1ms)[0m  SELECT  "categories".* FROM "categories" WHERE "categories"."name" = $1 LIMIT 1  [["name", "Sci-Fi"]]
+  [1m[36mCategory Load (0.1ms)[0m  [1mSELECT  "categories".* FROM "categories" WHERE "categories"."name" = $1 LIMIT 1[0m  [["name", "Kids"]]
+  [1m[35m (0.1ms)[0m  BEGIN
+  [1m[36mSQL (0.6ms)[0m  [1mINSERT INTO "products" ("name", "price", "description", "brand", "stock_count", "img_url", "created_at", "updated_at") VALUES ($1, $2, $3, $4, $5, $6, $7, $8) RETURNING "id"[0m  [["name", "General Doc Samson Lord T-Shirt"], ["price", "16.56"], ["description", "Ergonomic scalable process improvement"], ["brand", "Smith, Brakus and Runte"], ["stock_count", 14], ["img_url", "https://placehold.it/300x300.jpg/000"], ["created_at", "2016-05-29 23:11:23.059414"], ["updated_at", "2016-05-29 23:11:23.059414"]]
+  [1m[35m (0.4ms)[0m  COMMIT
+  [1m[36m (0.1ms)[0m  [1mBEGIN[0m
+  [1m[35mSQL (0.2ms)[0m  INSERT INTO "category_products" ("product_id", "category_id", "created_at", "updated_at") VALUES ($1, $2, $3, $4) RETURNING "id"  [["product_id", 44], ["category_id", 3], ["created_at", "2016-05-29 23:11:23.063372"], ["updated_at", "2016-05-29 23:11:23.063372"]]
+  [1m[36m (0.4ms)[0m  [1mCOMMIT[0m
+  [1m[35m (0.1ms)[0m  BEGIN
+  [1m[36mSQL (0.2ms)[0m  [1mINSERT INTO "category_products" ("product_id", "category_id", "created_at", "updated_at") VALUES ($1, $2, $3, $4) RETURNING "id"[0m  [["product_id", 44], ["category_id", 1], ["created_at", "2016-05-29 23:11:23.066021"], ["updated_at", "2016-05-29 23:11:23.066021"]]
+  [1m[35m (0.6ms)[0m  COMMIT
+  [1m[36m (0.1ms)[0m  [1mBEGIN[0m
+  [1m[35mSQL (0.2ms)[0m  INSERT INTO "category_products" ("product_id", "category_id", "created_at", "updated_at") VALUES ($1, $2, $3, $4) RETURNING "id"  [["product_id", 44], ["category_id", 5], ["created_at", "2016-05-29 23:11:23.068852"], ["updated_at", "2016-05-29 23:11:23.068852"]]
+  [1m[36m (0.4ms)[0m  [1mCOMMIT[0m
+  [1m[35mCategory Load (0.2ms)[0m  SELECT  "categories".* FROM "categories" WHERE "categories"."name" = $1 LIMIT 1  [["name", "Superhero"]]
+  [1m[36mCategory Load (0.1ms)[0m  [1mSELECT  "categories".* FROM "categories" WHERE "categories"."name" = $1 LIMIT 1[0m  [["name", "Sci-Fi"]]
+  [1m[35mCategory Load (0.1ms)[0m  SELECT  "categories".* FROM "categories" WHERE "categories"."name" = $1 LIMIT 1  [["name", "Kids"]]
+  [1m[36m (0.1ms)[0m  [1mBEGIN[0m
+  [1m[35mSQL (0.2ms)[0m  INSERT INTO "products" ("name", "price", "description", "brand", "stock_count", "img_url", "created_at", "updated_at") VALUES ($1, $2, $3, $4, $5, $6, $7, $8) RETURNING "id"  [["name", "Blink Wolf T-Shirt"], ["price", "22.45"], ["description", "Versatile transitional firmware"], ["brand", "Moore, Franecki and Stamm"], ["stock_count", 9], ["img_url", "https://placehold.it/300x300.jpg/000"], ["created_at", "2016-05-29 23:11:23.072851"], ["updated_at", "2016-05-29 23:11:23.072851"]]
+  [1m[36m (0.4ms)[0m  [1mCOMMIT[0m
+  [1m[35m (0.1ms)[0m  BEGIN
+  [1m[36mSQL (0.3ms)[0m  [1mINSERT INTO "category_products" ("product_id", "category_id", "created_at", "updated_at") VALUES ($1, $2, $3, $4) RETURNING "id"[0m  [["product_id", 45], ["category_id", 3], ["created_at", "2016-05-29 23:11:23.076479"], ["updated_at", "2016-05-29 23:11:23.076479"]]
+  [1m[35m (0.5ms)[0m  COMMIT
+  [1m[36m (0.2ms)[0m  [1mBEGIN[0m
+  [1m[35mSQL (0.2ms)[0m  INSERT INTO "category_products" ("product_id", "category_id", "created_at", "updated_at") VALUES ($1, $2, $3, $4) RETURNING "id"  [["product_id", 45], ["category_id", 1], ["created_at", "2016-05-29 23:11:23.080672"], ["updated_at", "2016-05-29 23:11:23.080672"]]
+  [1m[36m (0.5ms)[0m  [1mCOMMIT[0m
+  [1m[35m (0.1ms)[0m  BEGIN
+  [1m[36mSQL (0.2ms)[0m  [1mINSERT INTO "category_products" ("product_id", "category_id", "created_at", "updated_at") VALUES ($1, $2, $3, $4) RETURNING "id"[0m  [["product_id", 45], ["category_id", 5], ["created_at", "2016-05-29 23:11:23.083494"], ["updated_at", "2016-05-29 23:11:23.083494"]]
+  [1m[35m (0.3ms)[0m  COMMIT
+  [1m[36mCategory Load (0.1ms)[0m  [1mSELECT  "categories".* FROM "categories" WHERE "categories"."name" = $1 LIMIT 1[0m  [["name", "Superhero"]]
+  [1m[35mCategory Load (0.1ms)[0m  SELECT  "categories".* FROM "categories" WHERE "categories"."name" = $1 LIMIT 1  [["name", "Sci-Fi"]]
+  [1m[36mCategory Load (0.1ms)[0m  [1mSELECT  "categories".* FROM "categories" WHERE "categories"."name" = $1 LIMIT 1[0m  [["name", "Kids"]]
+  [1m[35m (0.1ms)[0m  BEGIN
+  [1m[36mSQL (0.2ms)[0m  [1mINSERT INTO "products" ("name", "price", "description", "brand", "stock_count", "img_url", "created_at", "updated_at") VALUES ($1, $2, $3, $4, $5, $6, $7, $8) RETURNING "id"[0m  [["name", "Ultra Gambit Strike T-Shirt"], ["price", "24.89"], ["description", "Upgradable full-range solution"], ["brand", "McClure-Douglas"], ["stock_count", 11], ["img_url", "https://placehold.it/300x300.jpg/000"], ["created_at", "2016-05-29 23:11:23.086956"], ["updated_at", "2016-05-29 23:11:23.086956"]]
+  [1m[35m (0.4ms)[0m  COMMIT
+  [1m[36m (0.1ms)[0m  [1mBEGIN[0m
+  [1m[35mSQL (0.2ms)[0m  INSERT INTO "category_products" ("product_id", "category_id", "created_at", "updated_at") VALUES ($1, $2, $3, $4) RETURNING "id"  [["product_id", 46], ["category_id", 3], ["created_at", "2016-05-29 23:11:23.090148"], ["updated_at", "2016-05-29 23:11:23.090148"]]
+  [1m[36m (0.4ms)[0m  [1mCOMMIT[0m
+  [1m[35m (0.1ms)[0m  BEGIN
+  [1m[36mSQL (0.2ms)[0m  [1mINSERT INTO "category_products" ("product_id", "category_id", "created_at", "updated_at") VALUES ($1, $2, $3, $4) RETURNING "id"[0m  [["product_id", 46], ["category_id", 1], ["created_at", "2016-05-29 23:11:23.092716"], ["updated_at", "2016-05-29 23:11:23.092716"]]
+  [1m[35m (0.4ms)[0m  COMMIT
+  [1m[36m (0.1ms)[0m  [1mBEGIN[0m
+  [1m[35mSQL (0.2ms)[0m  INSERT INTO "category_products" ("product_id", "category_id", "created_at", "updated_at") VALUES ($1, $2, $3, $4) RETURNING "id"  [["product_id", 46], ["category_id", 5], ["created_at", "2016-05-29 23:11:23.095739"], ["updated_at", "2016-05-29 23:11:23.095739"]]
+  [1m[36m (0.3ms)[0m  [1mCOMMIT[0m
+  [1m[35mCategory Load (0.2ms)[0m  SELECT  "categories".* FROM "categories" WHERE "categories"."name" = $1 LIMIT 1  [["name", "Superhero"]]
+  [1m[36mCategory Load (0.1ms)[0m  [1mSELECT  "categories".* FROM "categories" WHERE "categories"."name" = $1 LIMIT 1[0m  [["name", "Sci-Fi"]]
+  [1m[35mCategory Load (0.1ms)[0m  SELECT  "categories".* FROM "categories" WHERE "categories"."name" = $1 LIMIT 1  [["name", "Kids"]]
+  [1m[36m (0.1ms)[0m  [1mBEGIN[0m
+  [1m[35mSQL (0.2ms)[0m  INSERT INTO "products" ("name", "price", "description", "brand", "stock_count", "img_url", "created_at", "updated_at") VALUES ($1, $2, $3, $4, $5, $6, $7, $8) RETURNING "id"  [["name", "Illustrious Bomb Queen Strike T-Shirt"], ["price", "22.45"], ["description", "Networked background challenge"], ["brand", "Legros, Barrows and Schneider"], ["stock_count", 5], ["img_url", "https://placehold.it/300x300.jpg/000"], ["created_at", "2016-05-29 23:11:23.099429"], ["updated_at", "2016-05-29 23:11:23.099429"]]
+  [1m[36m (0.4ms)[0m  [1mCOMMIT[0m
+  [1m[35m (0.1ms)[0m  BEGIN
+  [1m[36mSQL (0.2ms)[0m  [1mINSERT INTO "category_products" ("product_id", "category_id", "created_at", "updated_at") VALUES ($1, $2, $3, $4) RETURNING "id"[0m  [["product_id", 47], ["category_id", 3], ["created_at", "2016-05-29 23:11:23.103129"], ["updated_at", "2016-05-29 23:11:23.103129"]]
+  [1m[35m (0.4ms)[0m  COMMIT
+  [1m[36m (0.1ms)[0m  [1mBEGIN[0m
+  [1m[35mSQL (0.2ms)[0m  INSERT INTO "category_products" ("product_id", "category_id", "created_at", "updated_at") VALUES ($1, $2, $3, $4) RETURNING "id"  [["product_id", 47], ["category_id", 1], ["created_at", "2016-05-29 23:11:23.105877"], ["updated_at", "2016-05-29 23:11:23.105877"]]
+  [1m[36m (0.4ms)[0m  [1mCOMMIT[0m
+  [1m[35m (0.1ms)[0m  BEGIN
+  [1m[36mSQL (0.2ms)[0m  [1mINSERT INTO "category_products" ("product_id", "category_id", "created_at", "updated_at") VALUES ($1, $2, $3, $4) RETURNING "id"[0m  [["product_id", 47], ["category_id", 5], ["created_at", "2016-05-29 23:11:23.108590"], ["updated_at", "2016-05-29 23:11:23.108590"]]
+  [1m[35m (0.5ms)[0m  COMMIT
+  [1m[36mCategory Load (0.2ms)[0m  [1mSELECT  "categories".* FROM "categories" WHERE "categories"."name" = $1 LIMIT 1[0m  [["name", "Superhero"]]
+  [1m[35mCategory Load (0.1ms)[0m  SELECT  "categories".* FROM "categories" WHERE "categories"."name" = $1 LIMIT 1  [["name", "Sci-Fi"]]
+  [1m[36mCategory Load (0.1ms)[0m  [1mSELECT  "categories".* FROM "categories" WHERE "categories"."name" = $1 LIMIT 1[0m  [["name", "Kids"]]
+  [1m[35m (0.1ms)[0m  BEGIN
+  [1m[36mSQL (0.2ms)[0m  [1mINSERT INTO "products" ("name", "price", "description", "brand", "stock_count", "img_url", "created_at", "updated_at") VALUES ($1, $2, $3, $4, $5, $6, $7, $8) RETURNING "id"[0m  [["name", "Supah Bantam T-Shirt"], ["price", "22.45"], ["description", "Extended fresh-thinking capacity"], ["brand", "Jones LLC"], ["stock_count", 18], ["img_url", "https://placehold.it/300x300.jpg/000"], ["created_at", "2016-05-29 23:11:23.113314"], ["updated_at", "2016-05-29 23:11:23.113314"]]
+  [1m[35m (0.4ms)[0m  COMMIT
+  [1m[36m (0.1ms)[0m  [1mBEGIN[0m
+  [1m[35mSQL (0.3ms)[0m  INSERT INTO "category_products" ("product_id", "category_id", "created_at", "updated_at") VALUES ($1, $2, $3, $4) RETURNING "id"  [["product_id", 48], ["category_id", 3], ["created_at", "2016-05-29 23:11:23.117980"], ["updated_at", "2016-05-29 23:11:23.117980"]]
+  [1m[36m (0.4ms)[0m  [1mCOMMIT[0m
+  [1m[35m (0.1ms)[0m  BEGIN
+  [1m[36mSQL (0.2ms)[0m  [1mINSERT INTO "category_products" ("product_id", "category_id", "created_at", "updated_at") VALUES ($1, $2, $3, $4) RETURNING "id"[0m  [["product_id", 48], ["category_id", 1], ["created_at", "2016-05-29 23:11:23.120802"], ["updated_at", "2016-05-29 23:11:23.120802"]]
+  [1m[35m (0.4ms)[0m  COMMIT
+  [1m[36m (0.1ms)[0m  [1mBEGIN[0m
+  [1m[35mSQL (0.2ms)[0m  INSERT INTO "category_products" ("product_id", "category_id", "created_at", "updated_at") VALUES ($1, $2, $3, $4) RETURNING "id"  [["product_id", 48], ["category_id", 5], ["created_at", "2016-05-29 23:11:23.123402"], ["updated_at", "2016-05-29 23:11:23.123402"]]
+  [1m[36m (0.4ms)[0m  [1mCOMMIT[0m
+  [1m[35mCategory Load (0.1ms)[0m  SELECT  "categories".* FROM "categories" WHERE "categories"."name" = $1 LIMIT 1  [["name", "Superhero"]]
+  [1m[36mCategory Load (0.1ms)[0m  [1mSELECT  "categories".* FROM "categories" WHERE "categories"."name" = $1 LIMIT 1[0m  [["name", "Sci-Fi"]]
+  [1m[35mCategory Load (0.1ms)[0m  SELECT  "categories".* FROM "categories" WHERE "categories"."name" = $1 LIMIT 1  [["name", "Kids"]]
+  [1m[36m (0.1ms)[0m  [1mBEGIN[0m
+  [1m[35mSQL (0.2ms)[0m  INSERT INTO "products" ("name", "price", "description", "brand", "stock_count", "img_url", "created_at", "updated_at") VALUES ($1, $2, $3, $4, $5, $6, $7, $8) RETURNING "id"  [["name", "Titan Brain T-Shirt"], ["price", "24.89"], ["description", "Reduced multimedia protocol"], ["brand", "Langosh, Torphy and Hilpert"], ["stock_count", 9], ["img_url", "https://placehold.it/300x300.jpg/000"], ["created_at", "2016-05-29 23:11:23.127119"], ["updated_at", "2016-05-29 23:11:23.127119"]]
+  [1m[36m (0.4ms)[0m  [1mCOMMIT[0m
+  [1m[35m (0.1ms)[0m  BEGIN
+  [1m[36mSQL (0.2ms)[0m  [1mINSERT INTO "category_products" ("product_id", "category_id", "created_at", "updated_at") VALUES ($1, $2, $3, $4) RETURNING "id"[0m  [["product_id", 49], ["category_id", 3], ["created_at", "2016-05-29 23:11:23.130388"], ["updated_at", "2016-05-29 23:11:23.130388"]]
+  [1m[35m (0.4ms)[0m  COMMIT
+  [1m[36m (0.1ms)[0m  [1mBEGIN[0m
+  [1m[35mSQL (0.2ms)[0m  INSERT INTO "category_products" ("product_id", "category_id", "created_at", "updated_at") VALUES ($1, $2, $3, $4) RETURNING "id"  [["product_id", 49], ["category_id", 1], ["created_at", "2016-05-29 23:11:23.132885"], ["updated_at", "2016-05-29 23:11:23.132885"]]
+  [1m[36m (0.4ms)[0m  [1mCOMMIT[0m
+  [1m[35m (0.1ms)[0m  BEGIN
+  [1m[36mSQL (0.2ms)[0m  [1mINSERT INTO "category_products" ("product_id", "category_id", "created_at", "updated_at") VALUES ($1, $2, $3, $4) RETURNING "id"[0m  [["product_id", 49], ["category_id", 5], ["created_at", "2016-05-29 23:11:23.135822"], ["updated_at", "2016-05-29 23:11:23.135822"]]
+  [1m[35m (0.4ms)[0m  COMMIT
+  [1m[36mCategory Load (0.1ms)[0m  [1mSELECT  "categories".* FROM "categories" WHERE "categories"."name" = $1 LIMIT 1[0m  [["name", "Superhero"]]
+  [1m[35mCategory Load (0.1ms)[0m  SELECT  "categories".* FROM "categories" WHERE "categories"."name" = $1 LIMIT 1  [["name", "Sci-Fi"]]
+  [1m[36mCategory Load (0.1ms)[0m  [1mSELECT  "categories".* FROM "categories" WHERE "categories"."name" = $1 LIMIT 1[0m  [["name", "Kids"]]
+  [1m[35m (0.1ms)[0m  BEGIN
+  [1m[36mSQL (0.2ms)[0m  [1mINSERT INTO "products" ("name", "price", "description", "brand", "stock_count", "img_url", "created_at", "updated_at") VALUES ($1, $2, $3, $4, $5, $6, $7, $8) RETURNING "id"[0m  [["name", "Dark Tigra Man T-Shirt"], ["price", "24.89"], ["description", "Inverse coherent synergy"], ["brand", "Morar, Kerluke and Jenkins"], ["stock_count", 18], ["img_url", "https://placehold.it/300x300.jpg/000"], ["created_at", "2016-05-29 23:11:23.139527"], ["updated_at", "2016-05-29 23:11:23.139527"]]
+  [1m[35m (0.4ms)[0m  COMMIT
+  [1m[36m (0.1ms)[0m  [1mBEGIN[0m
+  [1m[35mSQL (0.2ms)[0m  INSERT INTO "category_products" ("product_id", "category_id", "created_at", "updated_at") VALUES ($1, $2, $3, $4) RETURNING "id"  [["product_id", 50], ["category_id", 3], ["created_at", "2016-05-29 23:11:23.143120"], ["updated_at", "2016-05-29 23:11:23.143120"]]
+  [1m[36m (0.8ms)[0m  [1mCOMMIT[0m
+  [1m[35m (0.1ms)[0m  BEGIN
+  [1m[36mSQL (0.2ms)[0m  [1mINSERT INTO "category_products" ("product_id", "category_id", "created_at", "updated_at") VALUES ($1, $2, $3, $4) RETURNING "id"[0m  [["product_id", 50], ["category_id", 1], ["created_at", "2016-05-29 23:11:23.146897"], ["updated_at", "2016-05-29 23:11:23.146897"]]
+  [1m[35m (0.4ms)[0m  COMMIT
+  [1m[36m (0.1ms)[0m  [1mBEGIN[0m
+  [1m[35mSQL (0.2ms)[0m  INSERT INTO "category_products" ("product_id", "category_id", "created_at", "updated_at") VALUES ($1, $2, $3, $4) RETURNING "id"  [["product_id", 50], ["category_id", 5], ["created_at", "2016-05-29 23:11:23.149838"], ["updated_at", "2016-05-29 23:11:23.149838"]]
+  [1m[36m (0.4ms)[0m  [1mCOMMIT[0m
+  [1m[35mCategory Load (0.2ms)[0m  SELECT  "categories".* FROM "categories" WHERE "categories"."name" = $1 LIMIT 1  [["name", "Superhero"]]
+  [1m[36mCategory Load (0.1ms)[0m  [1mSELECT  "categories".* FROM "categories" WHERE "categories"."name" = $1 LIMIT 1[0m  [["name", "Sci-Fi"]]
+  [1m[35mCategory Load (0.1ms)[0m  SELECT  "categories".* FROM "categories" WHERE "categories"."name" = $1 LIMIT 1  [["name", "Kids"]]
+  [1m[36m (0.1ms)[0m  [1mBEGIN[0m
+  [1m[35mSQL (0.2ms)[0m  INSERT INTO "products" ("name", "price", "description", "brand", "stock_count", "img_url", "created_at", "updated_at") VALUES ($1, $2, $3, $4, $5, $6, $7, $8) RETURNING "id"  [["name", "General Wyatt Wingfoot T-Shirt"], ["price", "16.56"], ["description", "Multi-channelled foreground database"], ["brand", "Braun, Schmeler and Blanda"], ["stock_count", 17], ["img_url", "https://placehold.it/300x300.jpg/000"], ["created_at", "2016-05-29 23:11:23.153871"], ["updated_at", "2016-05-29 23:11:23.153871"]]
+  [1m[36m (0.9ms)[0m  [1mCOMMIT[0m
+  [1m[35m (0.1ms)[0m  BEGIN
+  [1m[36mSQL (0.2ms)[0m  [1mINSERT INTO "category_products" ("product_id", "category_id", "created_at", "updated_at") VALUES ($1, $2, $3, $4) RETURNING "id"[0m  [["product_id", 51], ["category_id", 3], ["created_at", "2016-05-29 23:11:23.158900"], ["updated_at", "2016-05-29 23:11:23.158900"]]
+  [1m[35m (0.4ms)[0m  COMMIT
+  [1m[36m (0.1ms)[0m  [1mBEGIN[0m
+  [1m[35mSQL (0.2ms)[0m  INSERT INTO "category_products" ("product_id", "category_id", "created_at", "updated_at") VALUES ($1, $2, $3, $4) RETURNING "id"  [["product_id", 51], ["category_id", 1], ["created_at", "2016-05-29 23:11:23.161584"], ["updated_at", "2016-05-29 23:11:23.161584"]]
+  [1m[36m (0.4ms)[0m  [1mCOMMIT[0m
+  [1m[35m (0.1ms)[0m  BEGIN
+  [1m[36mSQL (0.3ms)[0m  [1mINSERT INTO "category_products" ("product_id", "category_id", "created_at", "updated_at") VALUES ($1, $2, $3, $4) RETURNING "id"[0m  [["product_id", 51], ["category_id", 5], ["created_at", "2016-05-29 23:11:23.164146"], ["updated_at", "2016-05-29 23:11:23.164146"]]
+  [1m[35m (0.4ms)[0m  COMMIT
+  [1m[36mCategory Load (0.2ms)[0m  [1mSELECT  "categories".* FROM "categories" WHERE "categories"."name" = $1 LIMIT 1[0m  [["name", "Superhero"]]
+  [1m[35mCategory Load (0.1ms)[0m  SELECT  "categories".* FROM "categories" WHERE "categories"."name" = $1 LIMIT 1  [["name", "Sci-Fi"]]
+  [1m[36mCategory Load (0.1ms)[0m  [1mSELECT  "categories".* FROM "categories" WHERE "categories"."name" = $1 LIMIT 1[0m  [["name", "Kids"]]
+  [1m[35m (0.1ms)[0m  BEGIN
+  [1m[36mSQL (0.2ms)[0m  [1mINSERT INTO "products" ("name", "price", "description", "brand", "stock_count", "img_url", "created_at", "updated_at") VALUES ($1, $2, $3, $4, $5, $6, $7, $8) RETURNING "id"[0m  [["name", "Jigsaw T-Shirt"], ["price", "24.89"], ["description", "Enterprise-wide client-driven access"], ["brand", "Runolfsdottir-Halvorson"], ["stock_count", 8], ["img_url", "https://placehold.it/300x300.jpg/000"], ["created_at", "2016-05-29 23:11:23.168090"], ["updated_at", "2016-05-29 23:11:23.168090"]]
+  [1m[35m (0.4ms)[0m  COMMIT
+  [1m[36m (0.1ms)[0m  [1mBEGIN[0m
+  [1m[35mSQL (0.2ms)[0m  INSERT INTO "category_products" ("product_id", "category_id", "created_at", "updated_at") VALUES ($1, $2, $3, $4) RETURNING "id"  [["product_id", 52], ["category_id", 3], ["created_at", "2016-05-29 23:11:23.171652"], ["updated_at", "2016-05-29 23:11:23.171652"]]
+  [1m[36m (0.4ms)[0m  [1mCOMMIT[0m
+  [1m[35m (0.1ms)[0m  BEGIN
+  [1m[36mSQL (0.3ms)[0m  [1mINSERT INTO "category_products" ("product_id", "category_id", "created_at", "updated_at") VALUES ($1, $2, $3, $4) RETURNING "id"[0m  [["product_id", 52], ["category_id", 1], ["created_at", "2016-05-29 23:11:23.174204"], ["updated_at", "2016-05-29 23:11:23.174204"]]
+  [1m[35m (0.4ms)[0m  COMMIT
+  [1m[36m (0.1ms)[0m  [1mBEGIN[0m
+  [1m[35mSQL (0.3ms)[0m  INSERT INTO "category_products" ("product_id", "category_id", "created_at", "updated_at") VALUES ($1, $2, $3, $4) RETURNING "id"  [["product_id", 52], ["category_id", 5], ["created_at", "2016-05-29 23:11:23.177004"], ["updated_at", "2016-05-29 23:11:23.177004"]]
+  [1m[36m (0.4ms)[0m  [1mCOMMIT[0m
+  [1m[35mCategory Load (0.2ms)[0m  SELECT  "categories".* FROM "categories" WHERE "categories"."name" = $1 LIMIT 1  [["name", "Superhero"]]
+  [1m[36mCategory Load (0.2ms)[0m  [1mSELECT  "categories".* FROM "categories" WHERE "categories"."name" = $1 LIMIT 1[0m  [["name", "Sci-Fi"]]
+  [1m[35mCategory Load (0.2ms)[0m  SELECT  "categories".* FROM "categories" WHERE "categories"."name" = $1 LIMIT 1  [["name", "Kids"]]
+  [1m[36m (0.1ms)[0m  [1mBEGIN[0m
+  [1m[35mSQL (0.3ms)[0m  INSERT INTO "products" ("name", "price", "description", "brand", "stock_count", "img_url", "created_at", "updated_at") VALUES ($1, $2, $3, $4, $5, $6, $7, $8) RETURNING "id"  [["name", "Giant Box T-Shirt"], ["price", "15.99"], ["description", "Diverse zero defect database"], ["brand", "Carter Group"], ["stock_count", 18], ["img_url", "https://placehold.it/300x300.jpg/000"], ["created_at", "2016-05-29 23:11:23.182674"], ["updated_at", "2016-05-29 23:11:23.182674"]]
+  [1m[36m (0.4ms)[0m  [1mCOMMIT[0m
+  [1m[35m (0.1ms)[0m  BEGIN
+  [1m[36mSQL (0.2ms)[0m  [1mINSERT INTO "category_products" ("product_id", "category_id", "created_at", "updated_at") VALUES ($1, $2, $3, $4) RETURNING "id"[0m  [["product_id", 53], ["category_id", 3], ["created_at", "2016-05-29 23:11:23.186725"], ["updated_at", "2016-05-29 23:11:23.186725"]]
+  [1m[35m (0.4ms)[0m  COMMIT
+  [1m[36m (0.1ms)[0m  [1mBEGIN[0m
+  [1m[35mSQL (0.2ms)[0m  INSERT INTO "category_products" ("product_id", "category_id", "created_at", "updated_at") VALUES ($1, $2, $3, $4) RETURNING "id"  [["product_id", 53], ["category_id", 1], ["created_at", "2016-05-29 23:11:23.189803"], ["updated_at", "2016-05-29 23:11:23.189803"]]
+  [1m[36m (0.4ms)[0m  [1mCOMMIT[0m
+  [1m[35m (0.1ms)[0m  BEGIN
+  [1m[36mSQL (0.2ms)[0m  [1mINSERT INTO "category_products" ("product_id", "category_id", "created_at", "updated_at") VALUES ($1, $2, $3, $4) RETURNING "id"[0m  [["product_id", 53], ["category_id", 5], ["created_at", "2016-05-29 23:11:23.192367"], ["updated_at", "2016-05-29 23:11:23.192367"]]
+  [1m[35m (0.5ms)[0m  COMMIT
+  [1m[36mCategory Load (0.1ms)[0m  [1mSELECT  "categories".* FROM "categories" WHERE "categories"."name" = $1 LIMIT 1[0m  [["name", "Superhero"]]
+  [1m[35mCategory Load (0.1ms)[0m  SELECT  "categories".* FROM "categories" WHERE "categories"."name" = $1 LIMIT 1  [["name", "Sci-Fi"]]
+  [1m[36mCategory Load (0.1ms)[0m  [1mSELECT  "categories".* FROM "categories" WHERE "categories"."name" = $1 LIMIT 1[0m  [["name", "Kids"]]
+  [1m[35m (0.1ms)[0m  BEGIN
+  [1m[36mSQL (0.2ms)[0m  [1mINSERT INTO "products" ("name", "price", "description", "brand", "stock_count", "img_url", "created_at", "updated_at") VALUES ($1, $2, $3, $4, $5, $6, $7, $8) RETURNING "id"[0m  [["name", "Meltdown Eyes T-Shirt"], ["price", "22.45"], ["description", "Decentralized analyzing extranet"], ["brand", "Deckow Inc"], ["stock_count", 7], ["img_url", "https://placehold.it/300x300.jpg/000"], ["created_at", "2016-05-29 23:11:23.196002"], ["updated_at", "2016-05-29 23:11:23.196002"]]
+  [1m[35m (0.4ms)[0m  COMMIT
+  [1m[36m (0.1ms)[0m  [1mBEGIN[0m
+  [1m[35mSQL (0.2ms)[0m  INSERT INTO "category_products" ("product_id", "category_id", "created_at", "updated_at") VALUES ($1, $2, $3, $4) RETURNING "id"  [["product_id", 54], ["category_id", 3], ["created_at", "2016-05-29 23:11:23.199601"], ["updated_at", "2016-05-29 23:11:23.199601"]]
+  [1m[36m (0.3ms)[0m  [1mCOMMIT[0m
+  [1m[35m (0.1ms)[0m  BEGIN
+  [1m[36mSQL (0.2ms)[0m  [1mINSERT INTO "category_products" ("product_id", "category_id", "created_at", "updated_at") VALUES ($1, $2, $3, $4) RETURNING "id"[0m  [["product_id", 54], ["category_id", 1], ["created_at", "2016-05-29 23:11:23.202362"], ["updated_at", "2016-05-29 23:11:23.202362"]]
+  [1m[35m (0.4ms)[0m  COMMIT
+  [1m[36m (0.1ms)[0m  [1mBEGIN[0m
+  [1m[35mSQL (0.2ms)[0m  INSERT INTO "category_products" ("product_id", "category_id", "created_at", "updated_at") VALUES ($1, $2, $3, $4) RETURNING "id"  [["product_id", 54], ["category_id", 5], ["created_at", "2016-05-29 23:11:23.204990"], ["updated_at", "2016-05-29 23:11:23.204990"]]
+  [1m[36m (0.4ms)[0m  [1mCOMMIT[0m
+  [1m[35mCategory Load (0.1ms)[0m  SELECT  "categories".* FROM "categories" WHERE "categories"."name" = $1 LIMIT 1  [["name", "Superhero"]]
+  [1m[36mCategory Load (0.1ms)[0m  [1mSELECT  "categories".* FROM "categories" WHERE "categories"."name" = $1 LIMIT 1[0m  [["name", "Sci-Fi"]]
+  [1m[35mCategory Load (0.1ms)[0m  SELECT  "categories".* FROM "categories" WHERE "categories"."name" = $1 LIMIT 1  [["name", "Kids"]]
+  [1m[36m (0.1ms)[0m  [1mBEGIN[0m
+  [1m[35mSQL (0.3ms)[0m  INSERT INTO "products" ("name", "price", "description", "brand", "stock_count", "img_url", "created_at", "updated_at") VALUES ($1, $2, $3, $4, $5, $6, $7, $8) RETURNING "id"  [["name", "Green Giganta Thirteen T-Shirt"], ["price", "24.89"], ["description", "Focused logistical success"], ["brand", "Altenwerth LLC"], ["stock_count", 5], ["img_url", "https://placehold.it/300x300.jpg/000"], ["created_at", "2016-05-29 23:11:23.209066"], ["updated_at", "2016-05-29 23:11:23.209066"]]
+  [1m[36m (0.5ms)[0m  [1mCOMMIT[0m
+  [1m[35m (0.1ms)[0m  BEGIN
+  [1m[36mSQL (0.2ms)[0m  [1mINSERT INTO "category_products" ("product_id", "category_id", "created_at", "updated_at") VALUES ($1, $2, $3, $4) RETURNING "id"[0m  [["product_id", 55], ["category_id", 3], ["created_at", "2016-05-29 23:11:23.213537"], ["updated_at", "2016-05-29 23:11:23.213537"]]
+  [1m[35m (0.4ms)[0m  COMMIT
+  [1m[36m (0.1ms)[0m  [1mBEGIN[0m
+  [1m[35mSQL (0.2ms)[0m  INSERT INTO "category_products" ("product_id", "category_id", "created_at", "updated_at") VALUES ($1, $2, $3, $4) RETURNING "id"  [["product_id", 55], ["category_id", 1], ["created_at", "2016-05-29 23:11:23.216679"], ["updated_at", "2016-05-29 23:11:23.216679"]]
+  [1m[36m (0.4ms)[0m  [1mCOMMIT[0m
+  [1m[35m (0.1ms)[0m  BEGIN
+  [1m[36mSQL (0.2ms)[0m  [1mINSERT INTO "category_products" ("product_id", "category_id", "created_at", "updated_at") VALUES ($1, $2, $3, $4) RETURNING "id"[0m  [["product_id", 55], ["category_id", 5], ["created_at", "2016-05-29 23:11:23.219577"], ["updated_at", "2016-05-29 23:11:23.219577"]]
+  [1m[35m (0.4ms)[0m  COMMIT
+  [1m[36mCategory Load (0.1ms)[0m  [1mSELECT  "categories".* FROM "categories" WHERE "categories"."name" = $1 LIMIT 1[0m  [["name", "Superhero"]]
+  [1m[35mCategory Load (0.1ms)[0m  SELECT  "categories".* FROM "categories" WHERE "categories"."name" = $1 LIMIT 1  [["name", "Sci-Fi"]]
+  [1m[36mCategory Load (0.1ms)[0m  [1mSELECT  "categories".* FROM "categories" WHERE "categories"."name" = $1 LIMIT 1[0m  [["name", "Kids"]]
+  [1m[35m (0.1ms)[0m  BEGIN
+  [1m[36mSQL (0.2ms)[0m  [1mINSERT INTO "products" ("name", "price", "description", "brand", "stock_count", "img_url", "created_at", "updated_at") VALUES ($1, $2, $3, $4, $5, $6, $7, $8) RETURNING "id"[0m  [["name", "Green Bullseye Ivy T-Shirt"], ["price", "24.89"], ["description", "Future-proofed exuding moderator"], ["brand", "Mills-Cruickshank"], ["stock_count", 5], ["img_url", "https://placehold.it/300x300.jpg/000"], ["created_at", "2016-05-29 23:11:23.223471"], ["updated_at", "2016-05-29 23:11:23.223471"]]
+  [1m[35m (0.4ms)[0m  COMMIT
+  [1m[36m (0.1ms)[0m  [1mBEGIN[0m
+  [1m[35mSQL (0.2ms)[0m  INSERT INTO "category_products" ("product_id", "category_id", "created_at", "updated_at") VALUES ($1, $2, $3, $4) RETURNING "id"  [["product_id", 56], ["category_id", 3], ["created_at", "2016-05-29 23:11:23.228406"], ["updated_at", "2016-05-29 23:11:23.228406"]]
+  [1m[36m (0.5ms)[0m  [1mCOMMIT[0m
+  [1m[35m (0.1ms)[0m  BEGIN
+  [1m[36mSQL (0.2ms)[0m  [1mINSERT INTO "category_products" ("product_id", "category_id", "created_at", "updated_at") VALUES ($1, $2, $3, $4) RETURNING "id"[0m  [["product_id", 56], ["category_id", 1], ["created_at", "2016-05-29 23:11:23.231118"], ["updated_at", "2016-05-29 23:11:23.231118"]]
+  [1m[35m (0.4ms)[0m  COMMIT
+  [1m[36m (0.1ms)[0m  [1mBEGIN[0m
+  [1m[35mSQL (0.2ms)[0m  INSERT INTO "category_products" ("product_id", "category_id", "created_at", "updated_at") VALUES ($1, $2, $3, $4) RETURNING "id"  [["product_id", 56], ["category_id", 5], ["created_at", "2016-05-29 23:11:23.233866"], ["updated_at", "2016-05-29 23:11:23.233866"]]
+  [1m[36m (0.4ms)[0m  [1mCOMMIT[0m
+  [1m[35mCategory Load (0.2ms)[0m  SELECT  "categories".* FROM "categories" WHERE "categories"."name" = $1 LIMIT 1  [["name", "Superhero"]]
+  [1m[36mCategory Load (0.1ms)[0m  [1mSELECT  "categories".* FROM "categories" WHERE "categories"."name" = $1 LIMIT 1[0m  [["name", "Sci-Fi"]]
+  [1m[35mCategory Load (0.1ms)[0m  SELECT  "categories".* FROM "categories" WHERE "categories"."name" = $1 LIMIT 1  [["name", "Kids"]]
+  [1m[36m (0.1ms)[0m  [1mBEGIN[0m
+  [1m[35mSQL (0.2ms)[0m  INSERT INTO "products" ("name", "price", "description", "brand", "stock_count", "img_url", "created_at", "updated_at") VALUES ($1, $2, $3, $4, $5, $6, $7, $8) RETURNING "id"  [["name", "Captain Hell Brain T-Shirt"], ["price", "15.99"], ["description", "Quality-focused full-range alliance"], ["brand", "Jenkins-Gutkowski"], ["stock_count", 8], ["img_url", "https://placehold.it/300x300.jpg/000"], ["created_at", "2016-05-29 23:11:23.237746"], ["updated_at", "2016-05-29 23:11:23.237746"]]
+  [1m[36m (0.4ms)[0m  [1mCOMMIT[0m
+  [1m[35m (0.1ms)[0m  BEGIN
+  [1m[36mSQL (0.2ms)[0m  [1mINSERT INTO "category_products" ("product_id", "category_id", "created_at", "updated_at") VALUES ($1, $2, $3, $4) RETURNING "id"[0m  [["product_id", 57], ["category_id", 3], ["created_at", "2016-05-29 23:11:23.241392"], ["updated_at", "2016-05-29 23:11:23.241392"]]
+  [1m[35m (0.4ms)[0m  COMMIT
+  [1m[36m (0.1ms)[0m  [1mBEGIN[0m
+  [1m[35mSQL (0.4ms)[0m  INSERT INTO "category_products" ("product_id", "category_id", "created_at", "updated_at") VALUES ($1, $2, $3, $4) RETURNING "id"  [["product_id", 57], ["category_id", 1], ["created_at", "2016-05-29 23:11:23.244271"], ["updated_at", "2016-05-29 23:11:23.244271"]]
+  [1m[36m (0.4ms)[0m  [1mCOMMIT[0m
+  [1m[35m (0.1ms)[0m  BEGIN
+  [1m[36mSQL (0.2ms)[0m  [1mINSERT INTO "category_products" ("product_id", "category_id", "created_at", "updated_at") VALUES ($1, $2, $3, $4) RETURNING "id"[0m  [["product_id", 57], ["category_id", 5], ["created_at", "2016-05-29 23:11:23.247502"], ["updated_at", "2016-05-29 23:11:23.247502"]]
+  [1m[35m (0.4ms)[0m  COMMIT
+  [1m[36mCategory Load (0.2ms)[0m  [1mSELECT  "categories".* FROM "categories" WHERE "categories"."name" = $1 LIMIT 1[0m  [["name", "Superhero"]]
+  [1m[35mCategory Load (0.1ms)[0m  SELECT  "categories".* FROM "categories" WHERE "categories"."name" = $1 LIMIT 1  [["name", "Sci-Fi"]]
+  [1m[36mCategory Load (0.1ms)[0m  [1mSELECT  "categories".* FROM "categories" WHERE "categories"."name" = $1 LIMIT 1[0m  [["name", "Kids"]]
+  [1m[35m (0.1ms)[0m  BEGIN
+  [1m[36mSQL (0.2ms)[0m  [1mINSERT INTO "products" ("name", "price", "description", "brand", "stock_count", "img_url", "created_at", "updated_at") VALUES ($1, $2, $3, $4, $5, $6, $7, $8) RETURNING "id"[0m  [["name", "Captain Kool-Aid Man T-Shirt"], ["price", "16.56"], ["description", "Grass-roots bifurcated open architecture"], ["brand", "Toy Inc"], ["stock_count", 7], ["img_url", "https://placehold.it/300x300.jpg/000"], ["created_at", "2016-05-29 23:11:23.251664"], ["updated_at", "2016-05-29 23:11:23.251664"]]
+  [1m[35m (0.4ms)[0m  COMMIT
+  [1m[36m (0.1ms)[0m  [1mBEGIN[0m
+  [1m[35mSQL (0.2ms)[0m  INSERT INTO "category_products" ("product_id", "category_id", "created_at", "updated_at") VALUES ($1, $2, $3, $4) RETURNING "id"  [["product_id", 58], ["category_id", 3], ["created_at", "2016-05-29 23:11:23.255386"], ["updated_at", "2016-05-29 23:11:23.255386"]]
+  [1m[36m (0.4ms)[0m  [1mCOMMIT[0m
+  [1m[35m (0.1ms)[0m  BEGIN
+  [1m[36mSQL (0.2ms)[0m  [1mINSERT INTO "category_products" ("product_id", "category_id", "created_at", "updated_at") VALUES ($1, $2, $3, $4) RETURNING "id"[0m  [["product_id", 58], ["category_id", 1], ["created_at", "2016-05-29 23:11:23.258106"], ["updated_at", "2016-05-29 23:11:23.258106"]]
+  [1m[35m (0.4ms)[0m  COMMIT
+  [1m[36m (0.1ms)[0m  [1mBEGIN[0m
+  [1m[35mSQL (0.2ms)[0m  INSERT INTO "category_products" ("product_id", "category_id", "created_at", "updated_at") VALUES ($1, $2, $3, $4) RETURNING "id"  [["product_id", 58], ["category_id", 5], ["created_at", "2016-05-29 23:11:23.260913"], ["updated_at", "2016-05-29 23:11:23.260913"]]
+  [1m[36m (0.4ms)[0m  [1mCOMMIT[0m
+  [1m[35mCategory Load (0.1ms)[0m  SELECT  "categories".* FROM "categories" WHERE "categories"."name" = $1 LIMIT 1  [["name", "Superhero"]]
+  [1m[36mCategory Load (0.1ms)[0m  [1mSELECT  "categories".* FROM "categories" WHERE "categories"."name" = $1 LIMIT 1[0m  [["name", "Sci-Fi"]]
+  [1m[35mCategory Load (0.1ms)[0m  SELECT  "categories".* FROM "categories" WHERE "categories"."name" = $1 LIMIT 1  [["name", "Kids"]]
+  [1m[36m (0.1ms)[0m  [1mBEGIN[0m
+  [1m[35mSQL (0.2ms)[0m  INSERT INTO "products" ("name", "price", "description", "brand", "stock_count", "img_url", "created_at", "updated_at") VALUES ($1, $2, $3, $4, $5, $6, $7, $8) RETURNING "id"  [["name", "Ego Fist T-Shirt"], ["price", "15.99"], ["description", "Re-contextualized high-level methodology"], ["brand", "Russel, Kautzer and Eichmann"], ["stock_count", 10], ["img_url", "https://placehold.it/300x300.jpg/000"], ["created_at", "2016-05-29 23:11:23.264812"], ["updated_at", "2016-05-29 23:11:23.264812"]]
+  [1m[36m (0.4ms)[0m  [1mCOMMIT[0m
+  [1m[35m (0.1ms)[0m  BEGIN
+  [1m[36mSQL (0.2ms)[0m  [1mINSERT INTO "category_products" ("product_id", "category_id", "created_at", "updated_at") VALUES ($1, $2, $3, $4) RETURNING "id"[0m  [["product_id", 59], ["category_id", 3], ["created_at", "2016-05-29 23:11:23.268386"], ["updated_at", "2016-05-29 23:11:23.268386"]]
+  [1m[35m (0.4ms)[0m  COMMIT
+  [1m[36m (0.1ms)[0m  [1mBEGIN[0m
+  [1m[35mSQL (0.2ms)[0m  INSERT INTO "category_products" ("product_id", "category_id", "created_at", "updated_at") VALUES ($1, $2, $3, $4) RETURNING "id"  [["product_id", 59], ["category_id", 1], ["created_at", "2016-05-29 23:11:23.270950"], ["updated_at", "2016-05-29 23:11:23.270950"]]
+  [1m[36m (0.5ms)[0m  [1mCOMMIT[0m
+  [1m[35m (0.1ms)[0m  BEGIN
+  [1m[36mSQL (0.2ms)[0m  [1mINSERT INTO "category_products" ("product_id", "category_id", "created_at", "updated_at") VALUES ($1, $2, $3, $4) RETURNING "id"[0m  [["product_id", 59], ["category_id", 5], ["created_at", "2016-05-29 23:11:23.273782"], ["updated_at", "2016-05-29 23:11:23.273782"]]
+  [1m[35m (0.4ms)[0m  COMMIT
+  [1m[36mCategory Load (0.1ms)[0m  [1mSELECT  "categories".* FROM "categories" WHERE "categories"."name" = $1 LIMIT 1[0m  [["name", "Superhero"]]
+  [1m[35mCategory Load (0.1ms)[0m  SELECT  "categories".* FROM "categories" WHERE "categories"."name" = $1 LIMIT 1  [["name", "Sci-Fi"]]
+  [1m[36mCategory Load (0.1ms)[0m  [1mSELECT  "categories".* FROM "categories" WHERE "categories"."name" = $1 LIMIT 1[0m  [["name", "Kids"]]
+  [1m[35m (0.1ms)[0m  BEGIN
+  [1m[36mSQL (0.2ms)[0m  [1mINSERT INTO "products" ("name", "price", "description", "brand", "stock_count", "img_url", "created_at", "updated_at") VALUES ($1, $2, $3, $4, $5, $6, $7, $8) RETURNING "id"[0m  [["name", "Sentry T-Shirt"], ["price", "16.56"], ["description", "Innovative bandwidth-monitored matrices"], ["brand", "Leannon Inc"], ["stock_count", 11], ["img_url", "https://placehold.it/300x300.jpg/000"], ["created_at", "2016-05-29 23:11:23.278009"], ["updated_at", "2016-05-29 23:11:23.278009"]]
+  [1m[35m (0.3ms)[0m  COMMIT
+  [1m[36m (0.1ms)[0m  [1mBEGIN[0m
+  [1m[35mSQL (0.2ms)[0m  INSERT INTO "category_products" ("product_id", "category_id", "created_at", "updated_at") VALUES ($1, $2, $3, $4) RETURNING "id"  [["product_id", 60], ["category_id", 3], ["created_at", "2016-05-29 23:11:23.282168"], ["updated_at", "2016-05-29 23:11:23.282168"]]
+  [1m[36m (0.4ms)[0m  [1mCOMMIT[0m
+  [1m[35m (0.1ms)[0m  BEGIN
+  [1m[36mSQL (0.3ms)[0m  [1mINSERT INTO "category_products" ("product_id", "category_id", "created_at", "updated_at") VALUES ($1, $2, $3, $4) RETURNING "id"[0m  [["product_id", 60], ["category_id", 1], ["created_at", "2016-05-29 23:11:23.285084"], ["updated_at", "2016-05-29 23:11:23.285084"]]
+  [1m[35m (0.4ms)[0m  COMMIT
+  [1m[36m (0.1ms)[0m  [1mBEGIN[0m
+  [1m[35mSQL (0.2ms)[0m  INSERT INTO "category_products" ("product_id", "category_id", "created_at", "updated_at") VALUES ($1, $2, $3, $4) RETURNING "id"  [["product_id", 60], ["category_id", 5], ["created_at", "2016-05-29 23:11:23.287931"], ["updated_at", "2016-05-29 23:11:23.287931"]]
+  [1m[36m (0.4ms)[0m  [1mCOMMIT[0m
+  [1m[35mCategory Load (0.1ms)[0m  SELECT  "categories".* FROM "categories" WHERE "categories"."name" = $1 LIMIT 1  [["name", "School"]]
+  [1m[36m (0.1ms)[0m  [1mBEGIN[0m
+  [1m[35mSQL (0.2ms)[0m  INSERT INTO "products" ("name", "price", "description", "brand", "stock_count", "img_url", "created_at", "updated_at") VALUES ($1, $2, $3, $4, $5, $6, $7, $8) RETURNING "id"  [["name", "Bednar Institute T-Shirt"], ["price", "25.45"], ["description", "Implemented scalable alliance"], ["brand", "Hoppe and Sons"], ["stock_count", 17], ["img_url", "https://placehold.it/300x300.jpg/000"], ["created_at", "2016-05-29 23:11:23.291048"], ["updated_at", "2016-05-29 23:11:23.291048"]]
+  [1m[36m (0.4ms)[0m  [1mCOMMIT[0m
+  [1m[35m (0.1ms)[0m  BEGIN
+  [1m[36mSQL (0.2ms)[0m  [1mINSERT INTO "category_products" ("product_id", "category_id", "created_at", "updated_at") VALUES ($1, $2, $3, $4) RETURNING "id"[0m  [["product_id", 61], ["category_id", 4], ["created_at", "2016-05-29 23:11:23.294561"], ["updated_at", "2016-05-29 23:11:23.294561"]]
+  [1m[35m (0.5ms)[0m  COMMIT
+  [1m[36mCategory Load (0.1ms)[0m  [1mSELECT  "categories".* FROM "categories" WHERE "categories"."name" = $1 LIMIT 1[0m  [["name", "School"]]
+  [1m[35m (0.1ms)[0m  BEGIN
+  [1m[36mSQL (0.2ms)[0m  [1mINSERT INTO "products" ("name", "price", "description", "brand", "stock_count", "img_url", "created_at", "updated_at") VALUES ($1, $2, $3, $4, $5, $6, $7, $8) RETURNING "id"[0m  [["name", "The Upton Academy T-Shirt"], ["price", "15.99"], ["description", "Fully-configurable user-facing support"], ["brand", "Flatley-Wolff"], ["stock_count", 9], ["img_url", "https://placehold.it/300x300.jpg/000"], ["created_at", "2016-05-29 23:11:23.297697"], ["updated_at", "2016-05-29 23:11:23.297697"]]
+  [1m[35m (0.4ms)[0m  COMMIT
+  [1m[36m (0.1ms)[0m  [1mBEGIN[0m
+  [1m[35mSQL (0.2ms)[0m  INSERT INTO "category_products" ("product_id", "category_id", "created_at", "updated_at") VALUES ($1, $2, $3, $4) RETURNING "id"  [["product_id", 62], ["category_id", 4], ["created_at", "2016-05-29 23:11:23.301328"], ["updated_at", "2016-05-29 23:11:23.301328"]]
+  [1m[36m (0.4ms)[0m  [1mCOMMIT[0m
+  [1m[35mCategory Load (0.1ms)[0m  SELECT  "categories".* FROM "categories" WHERE "categories"."name" = $1 LIMIT 1  [["name", "School"]]
+  [1m[36m (0.1ms)[0m  [1mBEGIN[0m
+  [1m[35mSQL (0.2ms)[0m  INSERT INTO "products" ("name", "price", "description", "brand", "stock_count", "img_url", "created_at", "updated_at") VALUES ($1, $2, $3, $4, $5, $6, $7, $8) RETURNING "id"  [["name", "Western DuBuque T-Shirt"], ["price", "22.83"], ["description", "Re-engineered multi-tasking projection"], ["brand", "Rosenbaum-Langosh"], ["stock_count", 10], ["img_url", "https://placehold.it/300x300.jpg/000"], ["created_at", "2016-05-29 23:11:23.304367"], ["updated_at", "2016-05-29 23:11:23.304367"]]
+  [1m[36m (0.4ms)[0m  [1mCOMMIT[0m
+  [1m[35m (0.1ms)[0m  BEGIN
+  [1m[36mSQL (0.2ms)[0m  [1mINSERT INTO "category_products" ("product_id", "category_id", "created_at", "updated_at") VALUES ($1, $2, $3, $4) RETURNING "id"[0m  [["product_id", 63], ["category_id", 4], ["created_at", "2016-05-29 23:11:23.307811"], ["updated_at", "2016-05-29 23:11:23.307811"]]
+  [1m[35m (0.5ms)[0m  COMMIT
+  [1m[36mCategory Load (0.2ms)[0m  [1mSELECT  "categories".* FROM "categories" WHERE "categories"."name" = $1 LIMIT 1[0m  [["name", "School"]]
+  [1m[35m (0.1ms)[0m  BEGIN
+  [1m[36mSQL (0.2ms)[0m  [1mINSERT INTO "products" ("name", "price", "description", "brand", "stock_count", "img_url", "created_at", "updated_at") VALUES ($1, $2, $3, $4, $5, $6, $7, $8) RETURNING "id"[0m  [["name", "Ledner College T-Shirt"], ["price", "17.56"], ["description", "Fundamental cohesive local area network"], ["brand", "Bruen Inc"], ["stock_count", 16], ["img_url", "https://placehold.it/300x300.jpg/000"], ["created_at", "2016-05-29 23:11:23.311192"], ["updated_at", "2016-05-29 23:11:23.311192"]]
+  [1m[35m (0.4ms)[0m  COMMIT
+  [1m[36m (0.1ms)[0m  [1mBEGIN[0m
+  [1m[35mSQL (0.2ms)[0m  INSERT INTO "category_products" ("product_id", "category_id", "created_at", "updated_at") VALUES ($1, $2, $3, $4) RETURNING "id"  [["product_id", 64], ["category_id", 4], ["created_at", "2016-05-29 23:11:23.315635"], ["updated_at", "2016-05-29 23:11:23.315635"]]
+  [1m[36m (0.4ms)[0m  [1mCOMMIT[0m
+  [1m[35mCategory Load (0.1ms)[0m  SELECT  "categories".* FROM "categories" WHERE "categories"."name" = $1 LIMIT 1  [["name", "School"]]
+  [1m[36m (0.1ms)[0m  [1mBEGIN[0m
+  [1m[35mSQL (0.2ms)[0m  INSERT INTO "products" ("name", "price", "description", "brand", "stock_count", "img_url", "created_at", "updated_at") VALUES ($1, $2, $3, $4, $5, $6, $7, $8) RETURNING "id"  [["name", "Eastern Fahey University T-Shirt"], ["price", "15.99"], ["description", "Function-based regional capacity"], ["brand", "Gutmann Inc"], ["stock_count", 16], ["img_url", "https://placehold.it/300x300.jpg/000"], ["created_at", "2016-05-29 23:11:23.319092"], ["updated_at", "2016-05-29 23:11:23.319092"]]
+  [1m[36m (0.4ms)[0m  [1mCOMMIT[0m
+  [1m[35m (0.1ms)[0m  BEGIN
+  [1m[36mSQL (0.2ms)[0m  [1mINSERT INTO "category_products" ("product_id", "category_id", "created_at", "updated_at") VALUES ($1, $2, $3, $4) RETURNING "id"[0m  [["product_id", 65], ["category_id", 4], ["created_at", "2016-05-29 23:11:23.322497"], ["updated_at", "2016-05-29 23:11:23.322497"]]
+  [1m[35m (0.4ms)[0m  COMMIT
+  [1m[36mCategory Load (0.1ms)[0m  [1mSELECT  "categories".* FROM "categories" WHERE "categories"."name" = $1 LIMIT 1[0m  [["name", "School"]]
+  [1m[35m (0.1ms)[0m  BEGIN
+  [1m[36mSQL (0.2ms)[0m  [1mINSERT INTO "products" ("name", "price", "description", "brand", "stock_count", "img_url", "created_at", "updated_at") VALUES ($1, $2, $3, $4, $5, $6, $7, $8) RETURNING "id"[0m  [["name", "Eastern Alabama College T-Shirt"], ["price", "15.99"], ["description", "Robust asynchronous database"], ["brand", "Torp-Feest"], ["stock_count", 6], ["img_url", "https://placehold.it/300x300.jpg/000"], ["created_at", "2016-05-29 23:11:23.325535"], ["updated_at", "2016-05-29 23:11:23.325535"]]
+  [1m[35m (0.4ms)[0m  COMMIT
+  [1m[36m (0.1ms)[0m  [1mBEGIN[0m
+  [1m[35mSQL (0.2ms)[0m  INSERT INTO "category_products" ("product_id", "category_id", "created_at", "updated_at") VALUES ($1, $2, $3, $4) RETURNING "id"  [["product_id", 66], ["category_id", 4], ["created_at", "2016-05-29 23:11:23.328942"], ["updated_at", "2016-05-29 23:11:23.328942"]]
+  [1m[36m (0.4ms)[0m  [1mCOMMIT[0m
+  [1m[35mCategory Load (0.2ms)[0m  SELECT  "categories".* FROM "categories" WHERE "categories"."name" = $1 LIMIT 1  [["name", "School"]]
+  [1m[36m (0.1ms)[0m  [1mBEGIN[0m
+  [1m[35mSQL (0.2ms)[0m  INSERT INTO "products" ("name", "price", "description", "brand", "stock_count", "img_url", "created_at", "updated_at") VALUES ($1, $2, $3, $4, $5, $6, $7, $8) RETURNING "id"  [["name", "The Florida Academy T-Shirt"], ["price", "25.45"], ["description", "Secured dedicated firmware"], ["brand", "Zulauf-Ondricka"], ["stock_count", 5], ["img_url", "https://placehold.it/300x300.jpg/000"], ["created_at", "2016-05-29 23:11:23.332202"], ["updated_at", "2016-05-29 23:11:23.332202"]]
+  [1m[36m (0.4ms)[0m  [1mCOMMIT[0m
+  [1m[35m (0.1ms)[0m  BEGIN
+  [1m[36mSQL (0.2ms)[0m  [1mINSERT INTO "category_products" ("product_id", "category_id", "created_at", "updated_at") VALUES ($1, $2, $3, $4) RETURNING "id"[0m  [["product_id", 67], ["category_id", 4], ["created_at", "2016-05-29 23:11:23.335862"], ["updated_at", "2016-05-29 23:11:23.335862"]]
+  [1m[35m (0.4ms)[0m  COMMIT
+  [1m[36mCategory Load (0.1ms)[0m  [1mSELECT  "categories".* FROM "categories" WHERE "categories"."name" = $1 LIMIT 1[0m  [["name", "School"]]
+  [1m[35m (0.1ms)[0m  BEGIN
+  [1m[36mSQL (0.2ms)[0m  [1mINSERT INTO "products" ("name", "price", "description", "brand", "stock_count", "img_url", "created_at", "updated_at") VALUES ($1, $2, $3, $4, $5, $6, $7, $8) RETURNING "id"[0m  [["name", "West Hammes University T-Shirt"], ["price", "17.56"], ["description", "Switchable contextually-based open system"], ["brand", "Price and Sons"], ["stock_count", 16], ["img_url", "https://placehold.it/300x300.jpg/000"], ["created_at", "2016-05-29 23:11:23.339005"], ["updated_at", "2016-05-29 23:11:23.339005"]]
+  [1m[35m (0.4ms)[0m  COMMIT
+  [1m[36m (0.1ms)[0m  [1mBEGIN[0m
+  [1m[35mSQL (0.2ms)[0m  INSERT INTO "category_products" ("product_id", "category_id", "created_at", "updated_at") VALUES ($1, $2, $3, $4) RETURNING "id"  [["product_id", 68], ["category_id", 4], ["created_at", "2016-05-29 23:11:23.342758"], ["updated_at", "2016-05-29 23:11:23.342758"]]
+  [1m[36m (0.5ms)[0m  [1mCOMMIT[0m
+  [1m[35mCategory Load (0.2ms)[0m  SELECT  "categories".* FROM "categories" WHERE "categories"."name" = $1 LIMIT 1  [["name", "School"]]
+  [1m[36m (0.1ms)[0m  [1mBEGIN[0m
+  [1m[35mSQL (0.2ms)[0m  INSERT INTO "products" ("name", "price", "description", "brand", "stock_count", "img_url", "created_at", "updated_at") VALUES ($1, $2, $3, $4, $5, $6, $7, $8) RETURNING "id"  [["name", "Luettgen College T-Shirt"], ["price", "15.99"], ["description", "Secured background pricing structure"], ["brand", "Adams-Koepp"], ["stock_count", 12], ["img_url", "https://placehold.it/300x300.jpg/000"], ["created_at", "2016-05-29 23:11:23.346988"], ["updated_at", "2016-05-29 23:11:23.346988"]]
+  [1m[36m (0.4ms)[0m  [1mCOMMIT[0m
+  [1m[35m (0.1ms)[0m  BEGIN
+  [1m[36mSQL (0.2ms)[0m  [1mINSERT INTO "category_products" ("product_id", "category_id", "created_at", "updated_at") VALUES ($1, $2, $3, $4) RETURNING "id"[0m  [["product_id", 69], ["category_id", 4], ["created_at", "2016-05-29 23:11:23.350779"], ["updated_at", "2016-05-29 23:11:23.350779"]]
+  [1m[35m (0.4ms)[0m  COMMIT
+  [1m[36mCategory Load (0.1ms)[0m  [1mSELECT  "categories".* FROM "categories" WHERE "categories"."name" = $1 LIMIT 1[0m  [["name", "School"]]
+  [1m[35m (0.1ms)[0m  BEGIN
+  [1m[36mSQL (0.2ms)[0m  [1mINSERT INTO "products" ("name", "price", "description", "brand", "stock_count", "img_url", "created_at", "updated_at") VALUES ($1, $2, $3, $4, $5, $6, $7, $8) RETURNING "id"[0m  [["name", "Dibbert University T-Shirt"], ["price", "25.45"], ["description", "Assimilated mobile concept"], ["brand", "O'Kon Group"], ["stock_count", 9], ["img_url", "https://placehold.it/300x300.jpg/000"], ["created_at", "2016-05-29 23:11:23.353990"], ["updated_at", "2016-05-29 23:11:23.353990"]]
+  [1m[35m (0.4ms)[0m  COMMIT
+  [1m[36m (0.1ms)[0m  [1mBEGIN[0m
+  [1m[35mSQL (0.2ms)[0m  INSERT INTO "category_products" ("product_id", "category_id", "created_at", "updated_at") VALUES ($1, $2, $3, $4) RETURNING "id"  [["product_id", 70], ["category_id", 4], ["created_at", "2016-05-29 23:11:23.357409"], ["updated_at", "2016-05-29 23:11:23.357409"]]
+  [1m[36m (0.4ms)[0m  [1mCOMMIT[0m
+  [1m[35mCategory Load (0.1ms)[0m  SELECT  "categories".* FROM "categories" WHERE "categories"."name" = $1 LIMIT 1  [["name", "School"]]
+  [1m[36m (0.1ms)[0m  [1mBEGIN[0m
+  [1m[35mSQL (0.2ms)[0m  INSERT INTO "products" ("name", "price", "description", "brand", "stock_count", "img_url", "created_at", "updated_at") VALUES ($1, $2, $3, $4, $5, $6, $7, $8) RETURNING "id"  [["name", "Southern Treutel Institute T-Shirt"], ["price", "15.99"], ["description", "Business-focused 24 hour artificial intelligence"], ["brand", "Rippin and Sons"], ["stock_count", 15], ["img_url", "https://placehold.it/300x300.jpg/000"], ["created_at", "2016-05-29 23:11:23.360469"], ["updated_at", "2016-05-29 23:11:23.360469"]]
+  [1m[36m (0.4ms)[0m  [1mCOMMIT[0m
+  [1m[35m (0.1ms)[0m  BEGIN
+  [1m[36mSQL (0.2ms)[0m  [1mINSERT INTO "category_products" ("product_id", "category_id", "created_at", "updated_at") VALUES ($1, $2, $3, $4) RETURNING "id"[0m  [["product_id", 71], ["category_id", 4], ["created_at", "2016-05-29 23:11:23.363989"], ["updated_at", "2016-05-29 23:11:23.363989"]]
+  [1m[35m (0.3ms)[0m  COMMIT
+  [1m[36mCategory Load (0.2ms)[0m  [1mSELECT  "categories".* FROM "categories" WHERE "categories"."name" = $1 LIMIT 1[0m  [["name", "School"]]
+  [1m[35m (0.1ms)[0m  BEGIN
+  [1m[36mSQL (0.2ms)[0m  [1mINSERT INTO "products" ("name", "price", "description", "brand", "stock_count", "img_url", "created_at", "updated_at") VALUES ($1, $2, $3, $4, $5, $6, $7, $8) RETURNING "id"[0m  [["name", "Northern Mante T-Shirt"], ["price", "17.56"], ["description", "Re-contextualized 24/7 intranet"], ["brand", "Ledner, Veum and Schaden"], ["stock_count", 5], ["img_url", "https://placehold.it/300x300.jpg/000"], ["created_at", "2016-05-29 23:11:23.366976"], ["updated_at", "2016-05-29 23:11:23.366976"]]
+  [1m[35m (0.4ms)[0m  COMMIT
+  [1m[36m (0.1ms)[0m  [1mBEGIN[0m
+  [1m[35mSQL (0.2ms)[0m  INSERT INTO "category_products" ("product_id", "category_id", "created_at", "updated_at") VALUES ($1, $2, $3, $4) RETURNING "id"  [["product_id", 72], ["category_id", 4], ["created_at", "2016-05-29 23:11:23.370334"], ["updated_at", "2016-05-29 23:11:23.370334"]]
+  [1m[36m (0.4ms)[0m  [1mCOMMIT[0m
+  [1m[35mCategory Load (0.1ms)[0m  SELECT  "categories".* FROM "categories" WHERE "categories"."name" = $1 LIMIT 1  [["name", "School"]]
+  [1m[36m (0.1ms)[0m  [1mBEGIN[0m
+  [1m[35mSQL (0.2ms)[0m  INSERT INTO "products" ("name", "price", "description", "brand", "stock_count", "img_url", "created_at", "updated_at") VALUES ($1, $2, $3, $4, $5, $6, $7, $8) RETURNING "id"  [["name", "Considine University T-Shirt"], ["price", "25.45"], ["description", "Profit-focused directional throughput"], ["brand", "Mitchell, Wiegand and Wunsch"], ["stock_count", 15], ["img_url", "https://placehold.it/300x300.jpg/000"], ["created_at", "2016-05-29 23:11:23.373338"], ["updated_at", "2016-05-29 23:11:23.373338"]]
+  [1m[36m (0.4ms)[0m  [1mCOMMIT[0m
+  [1m[35m (0.1ms)[0m  BEGIN
+  [1m[36mSQL (0.2ms)[0m  [1mINSERT INTO "category_products" ("product_id", "category_id", "created_at", "updated_at") VALUES ($1, $2, $3, $4) RETURNING "id"[0m  [["product_id", 73], ["category_id", 4], ["created_at", "2016-05-29 23:11:23.376746"], ["updated_at", "2016-05-29 23:11:23.376746"]]
+  [1m[35m (0.9ms)[0m  COMMIT
+  [1m[36mCategory Load (0.1ms)[0m  [1mSELECT  "categories".* FROM "categories" WHERE "categories"."name" = $1 LIMIT 1[0m  [["name", "School"]]
+  [1m[35m (0.1ms)[0m  BEGIN
+  [1m[36mSQL (0.2ms)[0m  [1mINSERT INTO "products" ("name", "price", "description", "brand", "stock_count", "img_url", "created_at", "updated_at") VALUES ($1, $2, $3, $4, $5, $6, $7, $8) RETURNING "id"[0m  [["name", "Bosco Academy T-Shirt"], ["price", "22.83"], ["description", "Polarised holistic focus group"], ["brand", "Wisozk-Gutmann"], ["stock_count", 9], ["img_url", "https://placehold.it/300x300.jpg/000"], ["created_at", "2016-05-29 23:11:23.380721"], ["updated_at", "2016-05-29 23:11:23.380721"]]
+  [1m[35m (0.4ms)[0m  COMMIT
+  [1m[36m (0.1ms)[0m  [1mBEGIN[0m
+  [1m[35mSQL (0.2ms)[0m  INSERT INTO "category_products" ("product_id", "category_id", "created_at", "updated_at") VALUES ($1, $2, $3, $4) RETURNING "id"  [["product_id", 74], ["category_id", 4], ["created_at", "2016-05-29 23:11:23.384500"], ["updated_at", "2016-05-29 23:11:23.384500"]]
+  [1m[36m (0.4ms)[0m  [1mCOMMIT[0m
+  [1m[35mCategory Load (0.2ms)[0m  SELECT  "categories".* FROM "categories" WHERE "categories"."name" = $1 LIMIT 1  [["name", "School"]]
+  [1m[36m (0.1ms)[0m  [1mBEGIN[0m
+  [1m[35mSQL (0.2ms)[0m  INSERT INTO "products" ("name", "price", "description", "brand", "stock_count", "img_url", "created_at", "updated_at") VALUES ($1, $2, $3, $4, $5, $6, $7, $8) RETURNING "id"  [["name", "Northern Lemke T-Shirt"], ["price", "22.83"], ["description", "Synergistic optimal implementation"], ["brand", "Ebert, Gleichner and Nikolaus"], ["stock_count", 19], ["img_url", "https://placehold.it/300x300.jpg/000"], ["created_at", "2016-05-29 23:11:23.388689"], ["updated_at", "2016-05-29 23:11:23.388689"]]
+  [1m[36m (0.4ms)[0m  [1mCOMMIT[0m
+  [1m[35m (0.1ms)[0m  BEGIN
+  [1m[36mSQL (0.2ms)[0m  [1mINSERT INTO "category_products" ("product_id", "category_id", "created_at", "updated_at") VALUES ($1, $2, $3, $4) RETURNING "id"[0m  [["product_id", 75], ["category_id", 4], ["created_at", "2016-05-29 23:11:23.392641"], ["updated_at", "2016-05-29 23:11:23.392641"]]
+  [1m[35m (0.4ms)[0m  COMMIT
+  [1m[36mCategory Load (0.2ms)[0m  [1mSELECT  "categories".* FROM "categories" WHERE "categories"."name" = $1 LIMIT 1[0m  [["name", "School"]]
+  [1m[35m (0.1ms)[0m  BEGIN
+  [1m[36mSQL (0.2ms)[0m  [1mINSERT INTO "products" ("name", "price", "description", "brand", "stock_count", "img_url", "created_at", "updated_at") VALUES ($1, $2, $3, $4, $5, $6, $7, $8) RETURNING "id"[0m  [["name", "Northern Dietrich Academy T-Shirt"], ["price", "17.56"], ["description", "Exclusive object-oriented customer loyalty"], ["brand", "Heidenreich-Cummerata"], ["stock_count", 15], ["img_url", "https://placehold.it/300x300.jpg/000"], ["created_at", "2016-05-29 23:11:23.395945"], ["updated_at", "2016-05-29 23:11:23.395945"]]
+  [1m[35m (0.4ms)[0m  COMMIT
+  [1m[36m (0.1ms)[0m  [1mBEGIN[0m
+  [1m[35mSQL (0.2ms)[0m  INSERT INTO "category_products" ("product_id", "category_id", "created_at", "updated_at") VALUES ($1, $2, $3, $4) RETURNING "id"  [["product_id", 76], ["category_id", 4], ["created_at", "2016-05-29 23:11:23.399499"], ["updated_at", "2016-05-29 23:11:23.399499"]]
+  [1m[36m (0.9ms)[0m  [1mCOMMIT[0m
+  [1m[35mCategory Load (0.2ms)[0m  SELECT  "categories".* FROM "categories" WHERE "categories"."name" = $1 LIMIT 1  [["name", "School"]]
+  [1m[36m (0.1ms)[0m  [1mBEGIN[0m
+  [1m[35mSQL (0.2ms)[0m  INSERT INTO "products" ("name", "price", "description", "brand", "stock_count", "img_url", "created_at", "updated_at") VALUES ($1, $2, $3, $4, $5, $6, $7, $8) RETURNING "id"  [["name", "North Rhode Island Academy T-Shirt"], ["price", "22.83"], ["description", "Progressive leading edge portal"], ["brand", "Haley, Hessel and Swift"], ["stock_count", 12], ["img_url", "https://placehold.it/300x300.jpg/000"], ["created_at", "2016-05-29 23:11:23.403383"], ["updated_at", "2016-05-29 23:11:23.403383"]]
+  [1m[36m (0.4ms)[0m  [1mCOMMIT[0m
+  [1m[35m (0.1ms)[0m  BEGIN
+  [1m[36mSQL (0.5ms)[0m  [1mINSERT INTO "category_products" ("product_id", "category_id", "created_at", "updated_at") VALUES ($1, $2, $3, $4) RETURNING "id"[0m  [["product_id", 77], ["category_id", 4], ["created_at", "2016-05-29 23:11:23.407685"], ["updated_at", "2016-05-29 23:11:23.407685"]]
+  [1m[35m (0.4ms)[0m  COMMIT
+  [1m[36mCategory Load (0.2ms)[0m  [1mSELECT  "categories".* FROM "categories" WHERE "categories"."name" = $1 LIMIT 1[0m  [["name", "School"]]
+  [1m[35m (0.1ms)[0m  BEGIN
+  [1m[36mSQL (0.2ms)[0m  [1mINSERT INTO "products" ("name", "price", "description", "brand", "stock_count", "img_url", "created_at", "updated_at") VALUES ($1, $2, $3, $4, $5, $6, $7, $8) RETURNING "id"[0m  [["name", "North Shanahan Institute T-Shirt"], ["price", "17.56"], ["description", "Vision-oriented high-level emulation"], ["brand", "Braun Inc"], ["stock_count", 5], ["img_url", "https://placehold.it/300x300.jpg/000"], ["created_at", "2016-05-29 23:11:23.411630"], ["updated_at", "2016-05-29 23:11:23.411630"]]
+  [1m[35m (0.4ms)[0m  COMMIT
+  [1m[36m (0.1ms)[0m  [1mBEGIN[0m
+  [1m[35mSQL (0.2ms)[0m  INSERT INTO "category_products" ("product_id", "category_id", "created_at", "updated_at") VALUES ($1, $2, $3, $4) RETURNING "id"  [["product_id", 78], ["category_id", 4], ["created_at", "2016-05-29 23:11:23.415296"], ["updated_at", "2016-05-29 23:11:23.415296"]]
+  [1m[36m (0.4ms)[0m  [1mCOMMIT[0m
+  [1m[35mCategory Load (0.1ms)[0m  SELECT  "categories".* FROM "categories" WHERE "categories"."name" = $1 LIMIT 1  [["name", "School"]]
+  [1m[36m (0.1ms)[0m  [1mBEGIN[0m
+  [1m[35mSQL (0.2ms)[0m  INSERT INTO "products" ("name", "price", "description", "brand", "stock_count", "img_url", "created_at", "updated_at") VALUES ($1, $2, $3, $4, $5, $6, $7, $8) RETURNING "id"  [["name", "South Moore T-Shirt"], ["price", "15.99"], ["description", "Operative static structure"], ["brand", "Daugherty, Treutel and Pagac"], ["stock_count", 12], ["img_url", "https://placehold.it/300x300.jpg/000"], ["created_at", "2016-05-29 23:11:23.418453"], ["updated_at", "2016-05-29 23:11:23.418453"]]
+  [1m[36m (0.4ms)[0m  [1mCOMMIT[0m
+  [1m[35m (0.1ms)[0m  BEGIN
+  [1m[36mSQL (0.2ms)[0m  [1mINSERT INTO "category_products" ("product_id", "category_id", "created_at", "updated_at") VALUES ($1, $2, $3, $4) RETURNING "id"[0m  [["product_id", 79], ["category_id", 4], ["created_at", "2016-05-29 23:11:23.422139"], ["updated_at", "2016-05-29 23:11:23.422139"]]
+  [1m[35m (0.4ms)[0m  COMMIT
+  [1m[36mCategory Load (0.2ms)[0m  [1mSELECT  "categories".* FROM "categories" WHERE "categories"."name" = $1 LIMIT 1[0m  [["name", "School"]]
+  [1m[35m (0.1ms)[0m  BEGIN
+  [1m[36mSQL (0.2ms)[0m  [1mINSERT INTO "products" ("name", "price", "description", "brand", "stock_count", "img_url", "created_at", "updated_at") VALUES ($1, $2, $3, $4, $5, $6, $7, $8) RETURNING "id"[0m  [["name", "Western Barrows Academy T-Shirt"], ["price", "17.56"], ["description", "Devolved solution-oriented capability"], ["brand", "West-Cassin"], ["stock_count", 9], ["img_url", "https://placehold.it/300x300.jpg/000"], ["created_at", "2016-05-29 23:11:23.425336"], ["updated_at", "2016-05-29 23:11:23.425336"]]
+  [1m[35m (0.4ms)[0m  COMMIT
+  [1m[36m (0.1ms)[0m  [1mBEGIN[0m
+  [1m[35mSQL (0.2ms)[0m  INSERT INTO "category_products" ("product_id", "category_id", "created_at", "updated_at") VALUES ($1, $2, $3, $4) RETURNING "id"  [["product_id", 80], ["category_id", 4], ["created_at", "2016-05-29 23:11:23.428863"], ["updated_at", "2016-05-29 23:11:23.428863"]]
+  [1m[36m (0.4ms)[0m  [1mCOMMIT[0m
+  [1m[35m (0.2ms)[0m  BEGIN
+  [1m[36mUser Exists (0.4ms)[0m  [1mSELECT  1 AS one FROM "users" WHERE "users"."username" = 'tim' LIMIT 1[0m
+  [1m[35mSQL (0.4ms)[0m  INSERT INTO "users" ("username", "email", "password_digest", "first_name", "last_name", "street_address", "city", "state", "zipcode", "created_at", "updated_at") VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11) RETURNING "id"  [["username", "tim"], ["email", "tim@tim.com"], ["password_digest", "$2a$10$KpuX6UJARRpz4xBRS.wFyetpTo4eYmBFxj.zt1.DsSykvvgF56w86"], ["first_name", "Tim"], ["last_name", "Timales"], ["street_address", "321 Howards St."], ["city", "San Francisco"], ["state", "CA"], ["zipcode", "94102"], ["created_at", "2016-05-29 23:11:23.521299"], ["updated_at", "2016-05-29 23:11:23.521299"]]
+  [1m[36m (0.4ms)[0m  [1mCOMMIT[0m
+  [1m[35m (0.1ms)[0m  BEGIN
+  [1m[36mUser Exists (0.3ms)[0m  [1mSELECT  1 AS one FROM "users" WHERE "users"."username" = 'tom' LIMIT 1[0m
+  [1m[35mSQL (0.2ms)[0m  INSERT INTO "users" ("username", "email", "password_digest", "first_name", "last_name", "street_address", "city", "state", "zipcode", "created_at", "updated_at") VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11) RETURNING "id"  [["username", "tom"], ["email", "tom@tom.com"], ["password_digest", "$2a$10$FHW2p.o9yyCNxhHtdWt.AuzKhPDRTuCDwHQGecomZHVo1IdnuGjPi"], ["first_name", "Tom"], ["last_name", "Tomales"], ["street_address", "123 Mission St."], ["city", "San Francisco"], ["state", "CA"], ["zipcode", "94102"], ["created_at", "2016-05-29 23:11:23.603404"], ["updated_at", "2016-05-29 23:11:23.603404"]]
+  [1m[36m (0.6ms)[0m  [1mCOMMIT[0m
+  [1m[35mUser Load (0.3ms)[0m  SELECT  "users".* FROM "users" WHERE "users"."username" = $1 LIMIT 1  [["username", "tom"]]
+  [1m[36mOrderStatus Load (0.2ms)[0m  [1mSELECT "order_statuses".* FROM "order_statuses"[0m
+  [1m[35mProduct Load (0.8ms)[0m  SELECT "products".* FROM "products"
+  [1m[36m (0.1ms)[0m  [1mBEGIN[0m
+  [1m[35mSQL (0.4ms)[0m  INSERT INTO "orders" ("total_value", "order_status_id", "user_id", "created_at", "updated_at") VALUES ($1, $2, $3, $4, $5) RETURNING "id"  [["total_value", "0.0"], ["order_status_id", 1], ["user_id", 2], ["created_at", "2016-05-29 23:11:23.619185"], ["updated_at", "2016-05-29 23:11:23.619185"]]
+  [1m[36m (0.3ms)[0m  [1mCOMMIT[0m
+  [1m[35m (0.1ms)[0m  BEGIN
+  [1m[36mOrder Load (0.3ms)[0m  [1mSELECT  "orders".* FROM "orders" WHERE "orders"."id" = $1 LIMIT 1[0m  [["id", 1]]
+  [1m[35mProduct Load (0.3ms)[0m  SELECT  "products".* FROM "products" WHERE "products"."id" = $1 LIMIT 1  [["id", 5]]
+  [1m[36mSQL (0.4ms)[0m  [1mINSERT INTO "product_orders" ("product_id", "number_of_items", "total_price", "order_id", "unit_price", "created_at", "updated_at") VALUES ($1, $2, $3, $4, $5, $6, $7) RETURNING "id"[0m  [["product_id", 5], ["number_of_items", 2], ["total_price", "23.98"], ["order_id", 1], ["unit_price", "11.99"], ["created_at", "2016-05-29 23:11:23.632430"], ["updated_at", "2016-05-29 23:11:23.632430"]]
+  [1m[35m (0.3ms)[0m  COMMIT
+  [1m[36m (0.1ms)[0m  [1mBEGIN[0m
+  [1m[35mSQL (0.2ms)[0m  INSERT INTO "products" ("name", "price", "description", "brand", "stock_count", "img_url", "created_at", "updated_at") VALUES ($1, $2, $3, $4, $5, $6, $7, $8) RETURNING "id"  [["name", " T-Shirt Nike"], ["price", "22.89"], ["description", "Stand-alone heuristic architecture"], ["brand", "Schmidt, Fahey and Waelchi"], ["stock_count", 5], ["img_url", "https://placehold.it/300x300.jpg/000"], ["created_at", "2016-05-29 23:11:23.635463"], ["updated_at", "2016-05-29 23:11:23.635463"]]
+  [1m[36m (0.4ms)[0m  [1mCOMMIT[0m
+  [1m[35m (0.1ms)[0m  BEGIN
+  [1m[36mOrder Load (0.2ms)[0m  [1mSELECT  "orders".* FROM "orders" WHERE "orders"."id" = $1 LIMIT 1[0m  [["id", 1]]
+  [1m[35mProduct Load (0.2ms)[0m  SELECT  "products".* FROM "products" WHERE "products"."id" = $1 LIMIT 1  [["id", 81]]
+  [1m[36mSQL (0.2ms)[0m  [1mINSERT INTO "product_orders" ("product_id", "number_of_items", "total_price", "order_id", "unit_price", "created_at", "updated_at") VALUES ($1, $2, $3, $4, $5, $6, $7) RETURNING "id"[0m  [["product_id", 81], ["number_of_items", 2], ["total_price", "45.78"], ["order_id", 1], ["unit_price", "22.89"], ["created_at", "2016-05-29 23:11:23.639461"], ["updated_at", "2016-05-29 23:11:23.639461"]]
+  [1m[35m (0.4ms)[0m  COMMIT
+
+
+Started GET "/" for ::1 at 2016-05-29 16:11:35 -0700
+  [1m[36mActiveRecord::SchemaMigration Load (0.4ms)[0m  [1mSELECT "schema_migrations".* FROM "schema_migrations"[0m
+Processing by ProductsController#index as HTML
+  [1m[35mUser Load (0.5ms)[0m  SELECT  "users".* FROM "users" WHERE "users"."id" = $1 LIMIT 1  [["id", 4]]
+Completed 404 Not Found in 35ms (ActiveRecord: 4.1ms)
+
+ActiveRecord::RecordNotFound - Couldn't find User with 'id'=4:
+  activerecord (4.2.6) lib/active_record/core.rb:155:in `find'
+  app/controllers/application_controller.rb:8:in `current_user'
+  app/controllers/application_controller.rb:12:in `authorize'
+  activesupport (4.2.6) lib/active_support/callbacks.rb:432:in `block in make_lambda'
+  activesupport (4.2.6) lib/active_support/callbacks.rb:164:in `block in halting'
+  activesupport (4.2.6) lib/active_support/callbacks.rb:504:in `block in call'
+  activesupport (4.2.6) lib/active_support/callbacks.rb:504:in `call'
+  activesupport (4.2.6) lib/active_support/callbacks.rb:92:in `__run_callbacks__'
+  activesupport (4.2.6) lib/active_support/callbacks.rb:778:in `_run_process_action_callbacks'
+  activesupport (4.2.6) lib/active_support/callbacks.rb:81:in `run_callbacks'
+  actionpack (4.2.6) lib/abstract_controller/callbacks.rb:19:in `process_action'
+  actionpack (4.2.6) lib/action_controller/metal/rescue.rb:29:in `process_action'
+  actionpack (4.2.6) lib/action_controller/metal/instrumentation.rb:32:in `block in process_action'
+  activesupport (4.2.6) lib/active_support/notifications.rb:164:in `block in instrument'
+  activesupport (4.2.6) lib/active_support/notifications/instrumenter.rb:20:in `instrument'
+  activesupport (4.2.6) lib/active_support/notifications.rb:164:in `instrument'
+  actionpack (4.2.6) lib/action_controller/metal/instrumentation.rb:30:in `process_action'
+  actionpack (4.2.6) lib/action_controller/metal/params_wrapper.rb:250:in `process_action'
+  activerecord (4.2.6) lib/active_record/railties/controller_runtime.rb:18:in `process_action'
+  actionpack (4.2.6) lib/abstract_controller/base.rb:137:in `process'
+  actionview (4.2.6) lib/action_view/rendering.rb:30:in `process'
+  actionpack (4.2.6) lib/action_controller/metal.rb:196:in `dispatch'
+  actionpack (4.2.6) lib/action_controller/metal/rack_delegation.rb:13:in `dispatch'
+  actionpack (4.2.6) lib/action_controller/metal.rb:237:in `block in action'
+  actionpack (4.2.6) lib/action_dispatch/routing/route_set.rb:74:in `dispatch'
+  actionpack (4.2.6) lib/action_dispatch/routing/route_set.rb:43:in `serve'
+  actionpack (4.2.6) lib/action_dispatch/journey/router.rb:43:in `block in serve'
+  actionpack (4.2.6) lib/action_dispatch/journey/router.rb:30:in `serve'
+  actionpack (4.2.6) lib/action_dispatch/routing/route_set.rb:817:in `call'
+  rack (1.6.4) lib/rack/etag.rb:24:in `call'
+  rack (1.6.4) lib/rack/conditionalget.rb:25:in `call'
+  rack (1.6.4) lib/rack/head.rb:13:in `call'
+  actionpack (4.2.6) lib/action_dispatch/middleware/params_parser.rb:27:in `call'
+  actionpack (4.2.6) lib/action_dispatch/middleware/flash.rb:260:in `call'
+  rack (1.6.4) lib/rack/session/abstract/id.rb:225:in `context'
+  rack (1.6.4) lib/rack/session/abstract/id.rb:220:in `call'
+  actionpack (4.2.6) lib/action_dispatch/middleware/cookies.rb:560:in `call'
+  activerecord (4.2.6) lib/active_record/query_cache.rb:36:in `call'
+  activerecord (4.2.6) lib/active_record/connection_adapters/abstract/connection_pool.rb:653:in `call'
+  activerecord (4.2.6) lib/active_record/migration.rb:377:in `call'
+  actionpack (4.2.6) lib/action_dispatch/middleware/callbacks.rb:29:in `block in call'
+  activesupport (4.2.6) lib/active_support/callbacks.rb:88:in `__run_callbacks__'
+  activesupport (4.2.6) lib/active_support/callbacks.rb:778:in `_run_call_callbacks'
+  activesupport (4.2.6) lib/active_support/callbacks.rb:81:in `run_callbacks'
+  actionpack (4.2.6) lib/action_dispatch/middleware/callbacks.rb:27:in `call'
+  actionpack (4.2.6) lib/action_dispatch/middleware/reloader.rb:73:in `call'
+  actionpack (4.2.6) lib/action_dispatch/middleware/remote_ip.rb:78:in `call'
+  better_errors (2.1.1) lib/better_errors/middleware.rb:84:in `protected_app_call'
+  better_errors (2.1.1) lib/better_errors/middleware.rb:79:in `better_errors_call'
+  better_errors (2.1.1) lib/better_errors/middleware.rb:57:in `call'
+  actionpack (4.2.6) lib/action_dispatch/middleware/debug_exceptions.rb:17:in `call'
+  actionpack (4.2.6) lib/action_dispatch/middleware/show_exceptions.rb:30:in `call'
+  railties (4.2.6) lib/rails/rack/logger.rb:38:in `call_app'
+  railties (4.2.6) lib/rails/rack/logger.rb:20:in `block in call'
+  activesupport (4.2.6) lib/active_support/tagged_logging.rb:68:in `block in tagged'
+  activesupport (4.2.6) lib/active_support/tagged_logging.rb:26:in `tagged'
+  activesupport (4.2.6) lib/active_support/tagged_logging.rb:68:in `tagged'
+  railties (4.2.6) lib/rails/rack/logger.rb:20:in `call'
+  actionpack (4.2.6) lib/action_dispatch/middleware/request_id.rb:21:in `call'
+  rack (1.6.4) lib/rack/methodoverride.rb:22:in `call'
+  rack (1.6.4) lib/rack/runtime.rb:18:in `call'
+  activesupport (4.2.6) lib/active_support/cache/strategy/local_cache_middleware.rb:28:in `call'
+  rack (1.6.4) lib/rack/lock.rb:17:in `call'
+  actionpack (4.2.6) lib/action_dispatch/middleware/static.rb:120:in `call'
+  rack (1.6.4) lib/rack/sendfile.rb:113:in `call'
+  railties (4.2.6) lib/rails/engine.rb:518:in `call'
+  railties (4.2.6) lib/rails/application.rb:165:in `call'
+  rack (1.6.4) lib/rack/content_length.rb:15:in `call'
+  thin (1.6.4) lib/thin/connection.rb:86:in `block in pre_process'
+  thin (1.6.4) lib/thin/connection.rb:84:in `pre_process'
+  thin (1.6.4) lib/thin/connection.rb:53:in `process'
+  thin (1.6.4) lib/thin/connection.rb:39:in `receive_data'
+  eventmachine (1.2.0.1) lib/eventmachine.rb:194:in `run'
+  thin (1.6.4) lib/thin/backends/base.rb:73:in `start'
+  thin (1.6.4) lib/thin/server.rb:162:in `start'
+  rack (1.6.4) lib/rack/handler/thin.rb:19:in `run'
+  rack (1.6.4) lib/rack/server.rb:286:in `start'
+  railties (4.2.6) lib/rails/commands/server.rb:80:in `start'
+  railties (4.2.6) lib/rails/commands/commands_tasks.rb:80:in `block in server'
+  railties (4.2.6) lib/rails/commands/commands_tasks.rb:75:in `server'
+  railties (4.2.6) lib/rails/commands/commands_tasks.rb:39:in `run_command!'
+  railties (4.2.6) lib/rails/commands.rb:17:in `<top (required)>'
+  bin/rails:4:in `<main>'
+
+
+
+Started GET "/" for ::1 at 2016-05-29 16:11:36 -0700
+Processing by ProductsController#index as HTML
+  [1m[36mUser Load (0.5ms)[0m  [1mSELECT  "users".* FROM "users" WHERE "users"."id" = $1 LIMIT 1[0m  [["id", 4]]
+Completed 404 Not Found in 2ms (ActiveRecord: 0.5ms)
+
+ActiveRecord::RecordNotFound - Couldn't find User with 'id'=4:
+  activerecord (4.2.6) lib/active_record/core.rb:155:in `find'
+  app/controllers/application_controller.rb:8:in `current_user'
+  app/controllers/application_controller.rb:12:in `authorize'
+  activesupport (4.2.6) lib/active_support/callbacks.rb:432:in `block in make_lambda'
+  activesupport (4.2.6) lib/active_support/callbacks.rb:164:in `block in halting'
+  activesupport (4.2.6) lib/active_support/callbacks.rb:504:in `block in call'
+  activesupport (4.2.6) lib/active_support/callbacks.rb:504:in `call'
+  activesupport (4.2.6) lib/active_support/callbacks.rb:92:in `__run_callbacks__'
+  activesupport (4.2.6) lib/active_support/callbacks.rb:778:in `_run_process_action_callbacks'
+  activesupport (4.2.6) lib/active_support/callbacks.rb:81:in `run_callbacks'
+  actionpack (4.2.6) lib/abstract_controller/callbacks.rb:19:in `process_action'
+  actionpack (4.2.6) lib/action_controller/metal/rescue.rb:29:in `process_action'
+  actionpack (4.2.6) lib/action_controller/metal/instrumentation.rb:32:in `block in process_action'
+  activesupport (4.2.6) lib/active_support/notifications.rb:164:in `block in instrument'
+  activesupport (4.2.6) lib/active_support/notifications/instrumenter.rb:20:in `instrument'
+  activesupport (4.2.6) lib/active_support/notifications.rb:164:in `instrument'
+  actionpack (4.2.6) lib/action_controller/metal/instrumentation.rb:30:in `process_action'
+  actionpack (4.2.6) lib/action_controller/metal/params_wrapper.rb:250:in `process_action'
+  activerecord (4.2.6) lib/active_record/railties/controller_runtime.rb:18:in `process_action'
+  actionpack (4.2.6) lib/abstract_controller/base.rb:137:in `process'
+  actionview (4.2.6) lib/action_view/rendering.rb:30:in `process'
+  actionpack (4.2.6) lib/action_controller/metal.rb:196:in `dispatch'
+  actionpack (4.2.6) lib/action_controller/metal/rack_delegation.rb:13:in `dispatch'
+  actionpack (4.2.6) lib/action_controller/metal.rb:237:in `block in action'
+  actionpack (4.2.6) lib/action_dispatch/routing/route_set.rb:74:in `dispatch'
+  actionpack (4.2.6) lib/action_dispatch/routing/route_set.rb:43:in `serve'
+  actionpack (4.2.6) lib/action_dispatch/journey/router.rb:43:in `block in serve'
+  actionpack (4.2.6) lib/action_dispatch/journey/router.rb:30:in `serve'
+  actionpack (4.2.6) lib/action_dispatch/routing/route_set.rb:817:in `call'
+  rack (1.6.4) lib/rack/etag.rb:24:in `call'
+  rack (1.6.4) lib/rack/conditionalget.rb:25:in `call'
+  rack (1.6.4) lib/rack/head.rb:13:in `call'
+  actionpack (4.2.6) lib/action_dispatch/middleware/params_parser.rb:27:in `call'
+  actionpack (4.2.6) lib/action_dispatch/middleware/flash.rb:260:in `call'
+  rack (1.6.4) lib/rack/session/abstract/id.rb:225:in `context'
+  rack (1.6.4) lib/rack/session/abstract/id.rb:220:in `call'
+  actionpack (4.2.6) lib/action_dispatch/middleware/cookies.rb:560:in `call'
+  activerecord (4.2.6) lib/active_record/query_cache.rb:36:in `call'
+  activerecord (4.2.6) lib/active_record/connection_adapters/abstract/connection_pool.rb:653:in `call'
+  activerecord (4.2.6) lib/active_record/migration.rb:377:in `call'
+  actionpack (4.2.6) lib/action_dispatch/middleware/callbacks.rb:29:in `block in call'
+  activesupport (4.2.6) lib/active_support/callbacks.rb:88:in `__run_callbacks__'
+  activesupport (4.2.6) lib/active_support/callbacks.rb:778:in `_run_call_callbacks'
+  activesupport (4.2.6) lib/active_support/callbacks.rb:81:in `run_callbacks'
+  actionpack (4.2.6) lib/action_dispatch/middleware/callbacks.rb:27:in `call'
+  actionpack (4.2.6) lib/action_dispatch/middleware/reloader.rb:73:in `call'
+  actionpack (4.2.6) lib/action_dispatch/middleware/remote_ip.rb:78:in `call'
+  better_errors (2.1.1) lib/better_errors/middleware.rb:84:in `protected_app_call'
+  better_errors (2.1.1) lib/better_errors/middleware.rb:79:in `better_errors_call'
+  better_errors (2.1.1) lib/better_errors/middleware.rb:57:in `call'
+  actionpack (4.2.6) lib/action_dispatch/middleware/debug_exceptions.rb:17:in `call'
+  actionpack (4.2.6) lib/action_dispatch/middleware/show_exceptions.rb:30:in `call'
+  railties (4.2.6) lib/rails/rack/logger.rb:38:in `call_app'
+  railties (4.2.6) lib/rails/rack/logger.rb:20:in `block in call'
+  activesupport (4.2.6) lib/active_support/tagged_logging.rb:68:in `block in tagged'
+  activesupport (4.2.6) lib/active_support/tagged_logging.rb:26:in `tagged'
+  activesupport (4.2.6) lib/active_support/tagged_logging.rb:68:in `tagged'
+  railties (4.2.6) lib/rails/rack/logger.rb:20:in `call'
+  actionpack (4.2.6) lib/action_dispatch/middleware/request_id.rb:21:in `call'
+  rack (1.6.4) lib/rack/methodoverride.rb:22:in `call'
+  rack (1.6.4) lib/rack/runtime.rb:18:in `call'
+  activesupport (4.2.6) lib/active_support/cache/strategy/local_cache_middleware.rb:28:in `call'
+  rack (1.6.4) lib/rack/lock.rb:17:in `call'
+  actionpack (4.2.6) lib/action_dispatch/middleware/static.rb:120:in `call'
+  rack (1.6.4) lib/rack/sendfile.rb:113:in `call'
+  railties (4.2.6) lib/rails/engine.rb:518:in `call'
+  railties (4.2.6) lib/rails/application.rb:165:in `call'
+  rack (1.6.4) lib/rack/content_length.rb:15:in `call'
+  thin (1.6.4) lib/thin/connection.rb:86:in `block in pre_process'
+  thin (1.6.4) lib/thin/connection.rb:84:in `pre_process'
+  thin (1.6.4) lib/thin/connection.rb:53:in `process'
+  thin (1.6.4) lib/thin/connection.rb:39:in `receive_data'
+  eventmachine (1.2.0.1) lib/eventmachine.rb:194:in `run'
+  thin (1.6.4) lib/thin/backends/base.rb:73:in `start'
+  thin (1.6.4) lib/thin/server.rb:162:in `start'
+  rack (1.6.4) lib/rack/handler/thin.rb:19:in `run'
+  rack (1.6.4) lib/rack/server.rb:286:in `start'
+  railties (4.2.6) lib/rails/commands/server.rb:80:in `start'
+  railties (4.2.6) lib/rails/commands/commands_tasks.rb:80:in `block in server'
+  railties (4.2.6) lib/rails/commands/commands_tasks.rb:75:in `server'
+  railties (4.2.6) lib/rails/commands/commands_tasks.rb:39:in `run_command!'
+  railties (4.2.6) lib/rails/commands.rb:17:in `<top (required)>'
+  bin/rails:4:in `<main>'
+
+
+
+Started POST "/__better_errors/3f175ff9bf9680bf/variables" for ::1 at 2016-05-29 16:11:36 -0700
+
+
+Started GET "/" for ::1 at 2016-05-29 16:11:38 -0700
+Processing by ProductsController#index as HTML
+  [1m[35mUser Load (0.3ms)[0m  SELECT  "users".* FROM "users" WHERE "users"."id" = $1 LIMIT 1  [["id", 4]]
+Completed 404 Not Found in 2ms (ActiveRecord: 0.3ms)
+
+ActiveRecord::RecordNotFound - Couldn't find User with 'id'=4:
+  activerecord (4.2.6) lib/active_record/core.rb:155:in `find'
+  app/controllers/application_controller.rb:8:in `current_user'
+  app/controllers/application_controller.rb:12:in `authorize'
+  activesupport (4.2.6) lib/active_support/callbacks.rb:432:in `block in make_lambda'
+  activesupport (4.2.6) lib/active_support/callbacks.rb:164:in `block in halting'
+  activesupport (4.2.6) lib/active_support/callbacks.rb:504:in `block in call'
+  activesupport (4.2.6) lib/active_support/callbacks.rb:504:in `call'
+  activesupport (4.2.6) lib/active_support/callbacks.rb:92:in `__run_callbacks__'
+  activesupport (4.2.6) lib/active_support/callbacks.rb:778:in `_run_process_action_callbacks'
+  activesupport (4.2.6) lib/active_support/callbacks.rb:81:in `run_callbacks'
+  actionpack (4.2.6) lib/abstract_controller/callbacks.rb:19:in `process_action'
+  actionpack (4.2.6) lib/action_controller/metal/rescue.rb:29:in `process_action'
+  actionpack (4.2.6) lib/action_controller/metal/instrumentation.rb:32:in `block in process_action'
+  activesupport (4.2.6) lib/active_support/notifications.rb:164:in `block in instrument'
+  activesupport (4.2.6) lib/active_support/notifications/instrumenter.rb:20:in `instrument'
+  activesupport (4.2.6) lib/active_support/notifications.rb:164:in `instrument'
+  actionpack (4.2.6) lib/action_controller/metal/instrumentation.rb:30:in `process_action'
+  actionpack (4.2.6) lib/action_controller/metal/params_wrapper.rb:250:in `process_action'
+  activerecord (4.2.6) lib/active_record/railties/controller_runtime.rb:18:in `process_action'
+  actionpack (4.2.6) lib/abstract_controller/base.rb:137:in `process'
+  actionview (4.2.6) lib/action_view/rendering.rb:30:in `process'
+  actionpack (4.2.6) lib/action_controller/metal.rb:196:in `dispatch'
+  actionpack (4.2.6) lib/action_controller/metal/rack_delegation.rb:13:in `dispatch'
+  actionpack (4.2.6) lib/action_controller/metal.rb:237:in `block in action'
+  actionpack (4.2.6) lib/action_dispatch/routing/route_set.rb:74:in `dispatch'
+  actionpack (4.2.6) lib/action_dispatch/routing/route_set.rb:43:in `serve'
+  actionpack (4.2.6) lib/action_dispatch/journey/router.rb:43:in `block in serve'
+  actionpack (4.2.6) lib/action_dispatch/journey/router.rb:30:in `serve'
+  actionpack (4.2.6) lib/action_dispatch/routing/route_set.rb:817:in `call'
+  rack (1.6.4) lib/rack/etag.rb:24:in `call'
+  rack (1.6.4) lib/rack/conditionalget.rb:25:in `call'
+  rack (1.6.4) lib/rack/head.rb:13:in `call'
+  actionpack (4.2.6) lib/action_dispatch/middleware/params_parser.rb:27:in `call'
+  actionpack (4.2.6) lib/action_dispatch/middleware/flash.rb:260:in `call'
+  rack (1.6.4) lib/rack/session/abstract/id.rb:225:in `context'
+  rack (1.6.4) lib/rack/session/abstract/id.rb:220:in `call'
+  actionpack (4.2.6) lib/action_dispatch/middleware/cookies.rb:560:in `call'
+  activerecord (4.2.6) lib/active_record/query_cache.rb:36:in `call'
+  activerecord (4.2.6) lib/active_record/connection_adapters/abstract/connection_pool.rb:653:in `call'
+  activerecord (4.2.6) lib/active_record/migration.rb:377:in `call'
+  actionpack (4.2.6) lib/action_dispatch/middleware/callbacks.rb:29:in `block in call'
+  activesupport (4.2.6) lib/active_support/callbacks.rb:88:in `__run_callbacks__'
+  activesupport (4.2.6) lib/active_support/callbacks.rb:778:in `_run_call_callbacks'
+  activesupport (4.2.6) lib/active_support/callbacks.rb:81:in `run_callbacks'
+  actionpack (4.2.6) lib/action_dispatch/middleware/callbacks.rb:27:in `call'
+  actionpack (4.2.6) lib/action_dispatch/middleware/reloader.rb:73:in `call'
+  actionpack (4.2.6) lib/action_dispatch/middleware/remote_ip.rb:78:in `call'
+  better_errors (2.1.1) lib/better_errors/middleware.rb:84:in `protected_app_call'
+  better_errors (2.1.1) lib/better_errors/middleware.rb:79:in `better_errors_call'
+  better_errors (2.1.1) lib/better_errors/middleware.rb:57:in `call'
+  actionpack (4.2.6) lib/action_dispatch/middleware/debug_exceptions.rb:17:in `call'
+  actionpack (4.2.6) lib/action_dispatch/middleware/show_exceptions.rb:30:in `call'
+  railties (4.2.6) lib/rails/rack/logger.rb:38:in `call_app'
+  railties (4.2.6) lib/rails/rack/logger.rb:20:in `block in call'
+  activesupport (4.2.6) lib/active_support/tagged_logging.rb:68:in `block in tagged'
+  activesupport (4.2.6) lib/active_support/tagged_logging.rb:26:in `tagged'
+  activesupport (4.2.6) lib/active_support/tagged_logging.rb:68:in `tagged'
+  railties (4.2.6) lib/rails/rack/logger.rb:20:in `call'
+  actionpack (4.2.6) lib/action_dispatch/middleware/request_id.rb:21:in `call'
+  rack (1.6.4) lib/rack/methodoverride.rb:22:in `call'
+  rack (1.6.4) lib/rack/runtime.rb:18:in `call'
+  activesupport (4.2.6) lib/active_support/cache/strategy/local_cache_middleware.rb:28:in `call'
+  rack (1.6.4) lib/rack/lock.rb:17:in `call'
+  actionpack (4.2.6) lib/action_dispatch/middleware/static.rb:120:in `call'
+  rack (1.6.4) lib/rack/sendfile.rb:113:in `call'
+  railties (4.2.6) lib/rails/engine.rb:518:in `call'
+  railties (4.2.6) lib/rails/application.rb:165:in `call'
+  rack (1.6.4) lib/rack/content_length.rb:15:in `call'
+  thin (1.6.4) lib/thin/connection.rb:86:in `block in pre_process'
+  thin (1.6.4) lib/thin/connection.rb:84:in `pre_process'
+  thin (1.6.4) lib/thin/connection.rb:53:in `process'
+  thin (1.6.4) lib/thin/connection.rb:39:in `receive_data'
+  eventmachine (1.2.0.1) lib/eventmachine.rb:194:in `run'
+  thin (1.6.4) lib/thin/backends/base.rb:73:in `start'
+  thin (1.6.4) lib/thin/server.rb:162:in `start'
+  rack (1.6.4) lib/rack/handler/thin.rb:19:in `run'
+  rack (1.6.4) lib/rack/server.rb:286:in `start'
+  railties (4.2.6) lib/rails/commands/server.rb:80:in `start'
+  railties (4.2.6) lib/rails/commands/commands_tasks.rb:80:in `block in server'
+  railties (4.2.6) lib/rails/commands/commands_tasks.rb:75:in `server'
+  railties (4.2.6) lib/rails/commands/commands_tasks.rb:39:in `run_command!'
+  railties (4.2.6) lib/rails/commands.rb:17:in `<top (required)>'
+  bin/rails:4:in `<main>'
+
+
+
+Started POST "/__better_errors/a0ec9bd06e98655d/variables" for ::1 at 2016-05-29 16:11:38 -0700
+
+
+Started POST "/__better_errors/a0ec9bd06e98655d/variables" for ::1 at 2016-05-29 16:11:44 -0700
+
+
+Started GET "/logout" for ::1 at 2016-05-29 16:11:47 -0700
+Processing by SessionsController#destroy as HTML
+Redirected to http://localhost:3000/
+Completed 302 Found in 1ms (ActiveRecord: 0.0ms)
+
+
+Started GET "/logout" for ::1 at 2016-05-29 16:11:48 -0700
+Processing by SessionsController#destroy as HTML
+Redirected to http://localhost:3000/
+Completed 302 Found in 1ms (ActiveRecord: 0.0ms)
+
+
+Started GET "/logout" for ::1 at 2016-05-29 16:11:48 -0700
+Processing by SessionsController#destroy as HTML
+Redirected to http://localhost:3000/
+Completed 302 Found in 1ms (ActiveRecord: 0.0ms)
+
+
+Started GET "/" for ::1 at 2016-05-29 16:11:48 -0700
+Processing by ProductsController#index as HTML
+Redirected to http://localhost:3000/login
+Filter chain halted as :authorize rendered or redirected
+Completed 302 Found in 1ms (ActiveRecord: 0.0ms)
+
+
+Started GET "/login" for ::1 at 2016-05-29 16:11:48 -0700
+Processing by SessionsController#new as HTML
+  Rendered sessions/new.html.haml within layouts/application (7.4ms)
+Completed 200 OK in 1050ms (Views: 1049.6ms | ActiveRecord: 0.0ms)
